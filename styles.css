@@ -559,11 +559,20 @@ h1 {
   gap: 12px;
 }
 
+.compact-metrics {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
 .metric {
   padding: 14px;
   border: 1px solid var(--line);
   border-radius: 8px;
   background: #fff;
+}
+
+.compact-metrics .metric {
+  padding: 10px;
 }
 
 .metric span {
@@ -579,6 +588,25 @@ h1 {
   margin-top: 5px;
   font-size: 24px;
   overflow-wrap: anywhere;
+}
+
+.compact-metrics .metric strong {
+  font-size: 18px;
+}
+
+.inline-check {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding-top: 28px;
+  color: var(--text);
+  font-weight: 800;
+}
+
+.inline-check input {
+  width: auto;
+  min-height: auto;
 }
 
 .preview-image {

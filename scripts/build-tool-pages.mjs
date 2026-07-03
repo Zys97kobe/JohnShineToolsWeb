@@ -26,6 +26,15 @@ const pages = [
     group: "image"
   },
   {
+    slug: "image-resizer",
+    title: "Free Image Resizer Online - Resize JPG, PNG and WebP",
+    description: "Resize JPG, PNG, and WebP images online for free. Change image width and height directly in your browser.",
+    ogTitle: "Image Resizer",
+    icon: "RS",
+    summary: "Resize JPG, PNG, and WebP images by width, height, or percentage.",
+    group: "image"
+  },
+  {
     slug: "pdf-merge",
     title: "Free PDF Merge Online - Combine PDF Files",
     description: "Merge multiple PDF files into one PDF online for free. Combine PDF pages in your browser.",

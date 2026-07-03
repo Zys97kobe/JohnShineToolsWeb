@@ -32,6 +32,22 @@ const tools = [
     ]
   },
   {
+    id: "image-resizer",
+    icon: "RS",
+    category: "Image",
+    path: "/image-resizer/",
+    seoTitle: "Free Image Resizer Online - Resize JPG, PNG and WebP",
+    seoDescription: "Resize JPG, PNG, and WebP images online for free. Change image width and height directly in your browser.",
+    title: "Image Resizer",
+    summary: "Resize JPG, PNG, and WebP images by width, height, or percentage.",
+    description: "Change image dimensions directly in your browser. Lock the aspect ratio, scale by percentage, preview the result, and download the resized image.",
+    instructions: [
+      "Upload a JPG, PNG, or WebP image up to 20 MB.",
+      "Enter a target width and height, or scale the image by percentage.",
+      "Choose the output format and quality, preview the resized image, then download it."
+    ]
+  },
+  {
     id: "pdf-merge",
     icon: "PM",
     category: "PDF",
@@ -210,7 +226,7 @@ const homeMeta = {
 const toolGroups = {
   image: {
     label: "Image",
-    tools: ["image-compressor", "image-converter"]
+    tools: ["image-compressor", "image-converter", "image-resizer"]
   },
   file: {
     label: "File",
@@ -250,6 +266,8 @@ let timestampTimer = null;
 const MB = 1024 * 1024;
 const LIMITS = {
   imageFile: 20 * MB,
+  imageMaxDimension: 10000,
+  imageMaxPixels: 10000 * 10000,
   qrLogoFile: 2 * MB,
   pdfFile: 50 * MB,
   pdfMergeTotal: 150 * MB
@@ -281,6 +299,19 @@ function downloadBlob(blob, filename) {
 function validateImageFile(file) {
   if (file.size > LIMITS.imageFile) {
     return `This image is too large. Please choose a file under ${bytes(LIMITS.imageFile)}.`;
+  }
+  return "";
+}
+
+function validateImageDimensions(width, height) {
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) {
+    return "Width and height must be greater than 0.";
+  }
+  if (width > LIMITS.imageMaxDimension || height > LIMITS.imageMaxDimension) {
+    return `Width and height must be ${LIMITS.imageMaxDimension} px or less.`;
+  }
+  if (width * height > LIMITS.imageMaxPixels) {
+    return `Image dimensions are too large. Keep images under ${LIMITS.imageMaxDimension} × ${LIMITS.imageMaxDimension}.`;
   }
   return "";
 }
@@ -647,6 +678,214 @@ function initImageTool(kind) {
       `;
       document.querySelector("#downloadImage").addEventListener("click", () => downloadBlob(blob, name));
     }, format.value, Number(quality.value) / 100);
+  });
+}
+
+function imageResizerBody() {
+  return `
+    <div class="form-grid two-col">
+      <div class="field">
+        <label for="resizeImageInput">Image file</label>
+        <div class="file-picker">
+          <input class="native-file" id="resizeImageInput" type="file" accept="image/png,image/jpeg,image/webp">
+          <label class="file-button" for="resizeImageInput">Choose File</label>
+          <button class="file-clear" id="resizeImageFileClear" type="button" hidden>Clear</button>
+          <span class="file-name" id="resizeImageFileName">No file selected</span>
+        </div>
+        <small>JPG, PNG, and WebP are supported. Maximum file size: ${bytes(LIMITS.imageFile)}.</small>
+      </div>
+      <div class="field">
+        <label>Original</label>
+        <div class="result-grid compact-metrics">
+          <div class="metric"><span>Width</span><strong id="resizeOriginalWidth">-</strong></div>
+          <div class="metric"><span>Height</span><strong id="resizeOriginalHeight">-</strong></div>
+          <div class="metric"><span>Size</span><strong id="resizeOriginalSize">-</strong></div>
+        </div>
+      </div>
+      <div class="field">
+        <label for="resizeWidth">Target width</label>
+        <input id="resizeWidth" type="number" min="1" max="${LIMITS.imageMaxDimension}" placeholder="1200">
+      </div>
+      <div class="field">
+        <label for="resizeHeight">Target height</label>
+        <input id="resizeHeight" type="number" min="1" max="${LIMITS.imageMaxDimension}" placeholder="900">
+      </div>
+      <div class="field">
+        <label for="resizePercent">Scale percentage</label>
+        <input id="resizePercent" type="number" min="1" max="500" value="100">
+        <small>Use 50 for half size, 200 for double size.</small>
+      </div>
+      <div class="field">
+        <label for="resizeFormat">Output format</label>
+        <select id="resizeFormat">
+          <option value="image/jpeg">JPG</option>
+          <option value="image/png">PNG</option>
+          <option value="image/webp">WebP</option>
+        </select>
+      </div>
+      <div class="field">
+        <label for="resizeQuality">Quality: <span id="resizeQualityValue">82</span>%</label>
+        <input id="resizeQuality" type="range" min="20" max="100" value="82">
+        <small>Quality applies to JPG and WebP output.</small>
+      </div>
+      <label class="inline-check">
+        <input id="resizeLockRatio" type="checkbox" checked>
+        <span>Lock aspect ratio</span>
+      </label>
+    </div>
+    <div class="actions">
+      <button class="primary" id="resizeImage" type="button">Resize Image</button>
+    </div>
+    <div class="result" id="resizeResult"></div>
+  `;
+}
+
+function initImageResizer() {
+  const input = document.querySelector("#resizeImageInput");
+  const widthInput = document.querySelector("#resizeWidth");
+  const heightInput = document.querySelector("#resizeHeight");
+  const percentInput = document.querySelector("#resizePercent");
+  const formatInput = document.querySelector("#resizeFormat");
+  const qualityInput = document.querySelector("#resizeQuality");
+  const qualityValue = document.querySelector("#resizeQualityValue");
+  const lockRatio = document.querySelector("#resizeLockRatio");
+  const result = document.querySelector("#resizeResult");
+  const originalWidth = document.querySelector("#resizeOriginalWidth");
+  const originalHeight = document.querySelector("#resizeOriginalHeight");
+  const originalSize = document.querySelector("#resizeOriginalSize");
+  let sourceBitmap = null;
+  let sourceFile = null;
+  let aspectRatio = 1;
+
+  initFilePicker("resizeImageInput", "resizeImageFileName", "resizeImageFileClear");
+
+  const resetOriginal = () => {
+    originalWidth.textContent = "-";
+    originalHeight.textContent = "-";
+    originalSize.textContent = "-";
+    widthInput.value = "";
+    heightInput.value = "";
+    percentInput.value = "100";
+    result.innerHTML = "";
+  };
+
+  const setSizeFromPercent = () => {
+    if (!sourceBitmap) return;
+    const percent = Number(percentInput.value) || 100;
+    const nextWidth = Math.max(1, Math.round(sourceBitmap.width * percent / 100));
+    const nextHeight = Math.max(1, Math.round(sourceBitmap.height * percent / 100));
+    widthInput.value = nextWidth;
+    heightInput.value = nextHeight;
+  };
+
+  qualityInput.addEventListener("input", () => {
+    qualityValue.textContent = qualityInput.value;
+  });
+
+  input.addEventListener("change", async () => {
+    sourceFile = input.files[0] || null;
+    if (!sourceFile) {
+      sourceBitmap = null;
+      resetOriginal();
+      return;
+    }
+
+    const fileError = validateImageFile(sourceFile);
+    if (fileError) {
+      sourceBitmap = null;
+      resetOriginal();
+      result.innerHTML = `<p class="notice">${fileError}</p>`;
+      return;
+    }
+
+    let bitmap;
+    try {
+      bitmap = await createImageBitmap(sourceFile);
+    } catch (error) {
+      sourceBitmap = null;
+      resetOriginal();
+      result.innerHTML = `<p class="notice">This browser could not read the selected image.</p>`;
+      return;
+    }
+    const dimensionError = validateImageDimensions(bitmap.width, bitmap.height);
+    if (dimensionError) {
+      sourceBitmap = null;
+      resetOriginal();
+      result.innerHTML = `<p class="notice">${dimensionError}</p>`;
+      return;
+    }
+    sourceBitmap = bitmap;
+    aspectRatio = sourceBitmap.width / sourceBitmap.height;
+    originalWidth.textContent = sourceBitmap.width;
+    originalHeight.textContent = sourceBitmap.height;
+    originalSize.textContent = bytes(sourceFile.size);
+    percentInput.value = "100";
+    widthInput.value = sourceBitmap.width;
+    heightInput.value = sourceBitmap.height;
+  });
+
+  widthInput.addEventListener("input", () => {
+    if (!lockRatio.checked || !sourceBitmap) return;
+    const width = Number(widthInput.value);
+    if (width > 0) heightInput.value = Math.max(1, Math.round(width / aspectRatio));
+  });
+
+  heightInput.addEventListener("input", () => {
+    if (!lockRatio.checked || !sourceBitmap) return;
+    const height = Number(heightInput.value);
+    if (height > 0) widthInput.value = Math.max(1, Math.round(height * aspectRatio));
+  });
+
+  percentInput.addEventListener("input", setSizeFromPercent);
+
+  document.querySelector("#resizeImageFileClear").addEventListener("click", () => {
+    sourceBitmap = null;
+    sourceFile = null;
+    resetOriginal();
+  });
+
+  document.querySelector("#resizeImage").addEventListener("click", () => {
+    if (!sourceFile || !sourceBitmap) {
+      result.innerHTML = `<p class="notice">Choose an image first.</p>`;
+      return;
+    }
+
+    const targetWidth = Math.round(Number(widthInput.value));
+    const targetHeight = Math.round(Number(heightInput.value));
+    const dimensionError = validateImageDimensions(targetWidth, targetHeight);
+    if (dimensionError) {
+      result.innerHTML = `<p class="notice">${dimensionError}</p>`;
+      return;
+    }
+
+    const canvas = document.createElement("canvas");
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
+    const ctx = canvas.getContext("2d");
+    ctx.imageSmoothingEnabled = true;
+    ctx.imageSmoothingQuality = "high";
+    ctx.drawImage(sourceBitmap, 0, 0, targetWidth, targetHeight);
+
+    const quality = formatInput.value === "image/png" ? undefined : Number(qualityInput.value) / 100;
+    canvas.toBlob((blob) => {
+      if (!blob) {
+        result.innerHTML = `<p class="notice">This browser could not resize the selected image.</p>`;
+        return;
+      }
+      const ext = formatInput.value.split("/")[1].replace("jpeg", "jpg");
+      const name = sourceFile.name.replace(/\.[^.]+$/, `-resized.${ext}`);
+      const previewUrl = URL.createObjectURL(blob);
+      result.innerHTML = `
+        <div class="result-grid">
+          <div class="metric"><span>Original</span><strong>${sourceBitmap.width}×${sourceBitmap.height}</strong></div>
+          <div class="metric"><span>New size</span><strong>${targetWidth}×${targetHeight}</strong></div>
+          <div class="metric"><span>Output</span><strong>${bytes(blob.size)}</strong></div>
+        </div>
+        <p><img class="preview-image" src="${previewUrl}" alt="Resized image preview"></p>
+        <button class="primary" id="downloadResizedImage" type="button">Download Resized Image</button>
+      `;
+      document.querySelector("#downloadResizedImage").addEventListener("click", () => downloadBlob(blob, name));
+    }, formatInput.value, quality);
   });
 }
 
@@ -1303,16 +1542,18 @@ function initEncoding() {
 
 function renderTool() {
   const tool = getTool();
+  const isToolPage = Boolean(toolFromPath(window.location.pathname));
   if (timestampTimer) {
     clearInterval(timestampTimer);
     timestampTimer = null;
   }
-  updateMeta(tool, Boolean(toolFromPath(window.location.pathname)));
+  updateMeta(tool, isToolPage);
   renderCards(toolSearch.value);
 
   const bodies = {
     "image-compressor": imageToolBody("compress"),
     "image-converter": imageToolBody("convert"),
+    "image-resizer": imageResizerBody(),
     "pdf-merge": pdfInputBody("merge"),
     "pdf-split": pdfInputBody("split"),
     "pdf-compressor": pdfInputBody("compress"),
@@ -1329,6 +1570,7 @@ function renderTool() {
 
   if (tool.id === "image-compressor") initImageTool("compress");
   if (tool.id === "image-converter") initImageTool("convert");
+  if (tool.id === "image-resizer") initImageResizer();
   if (tool.id === "pdf-merge") initPdfTool("merge");
   if (tool.id === "pdf-split") initPdfTool("split");
   if (tool.id === "pdf-compressor") initPdfTool("compress");

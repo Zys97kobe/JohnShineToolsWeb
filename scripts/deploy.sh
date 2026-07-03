@@ -21,6 +21,7 @@ FILES=(
   assets
   image-compressor
   image-converter
+  image-resizer
   pdf-merge
   pdf-split
   pdf-compressor
