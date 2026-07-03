@@ -158,6 +158,38 @@ const tools = [
       "Generate a random password using your browser's crypto API.",
       "Copy the password and store it in a trusted password manager."
     ]
+  },
+  {
+    id: "unix-timestamp",
+    icon: "UT",
+    category: "Network",
+    path: "/unix-timestamp/",
+    seoTitle: "Free Unix Timestamp Converter Online - Convert Epoch Time",
+    seoDescription: "Convert Unix timestamps to readable dates and convert dates to Unix epoch time online for free.",
+    title: "Unix Timestamp Converter",
+    summary: "Convert Unix time, milliseconds, and readable dates.",
+    description: "Convert between Unix timestamps, milliseconds, ISO dates, and local time directly in your browser.",
+    instructions: [
+      "Check the current Unix timestamp in seconds and milliseconds.",
+      "Enter a Unix timestamp to convert it into local and UTC date formats.",
+      "Enter a date and time to convert it back into Unix epoch time."
+    ]
+  },
+  {
+    id: "encoding-converter",
+    icon: "EC",
+    category: "Network",
+    path: "/encoding-converter/",
+    seoTitle: "Free Encoding Converter Online - Unicode, UTF-8, Base64, URL",
+    seoDescription: "Encode and decode Unicode escapes, UTF-8 bytes, ASCII native text, Base64, URL, HTML entities, and hexadecimal text online for free.",
+    title: "Encoding Converter",
+    summary: "Encode and decode Unicode, UTF-8, ASCII, Base64, URL, HTML, and Hex.",
+    description: "Convert common web encodings for URLs, APIs, Unicode text, Base64, HTML, and debugging. Processing happens in your browser.",
+    instructions: [
+      "Paste the text you want to encode or decode.",
+      "Choose Unicode, UTF-8, ASCII/NATIVE, Base64, URL, HTML entities, or Hex conversion.",
+      "Run the conversion and copy the output for your request, page, or debugging task."
+    ]
   }
 ];
 
@@ -170,8 +202,8 @@ document.querySelector("#year").textContent = new Date().getFullYear();
 
 const siteBaseUrl = "https://johnshinetools.com";
 const homeMeta = {
-  title: "JohnShine Tools - Free Online Tools for Images, PDFs, Text and Security",
-  description: "Use free online tools to compress images, convert images, merge PDFs, split PDFs, count words, convert text case, generate QR codes, and create secure passwords.",
+  title: "JohnShine Tools - Free Online Tools for Images, PDFs, Text, Network and Security",
+  description: "Use free online tools to compress images, convert images, merge PDFs, split PDFs, count words, convert text case, generate QR codes, create passwords, and convert timestamps or encodings.",
   url: `${siteBaseUrl}/`
 };
 
@@ -187,6 +219,10 @@ const toolGroups = {
   text: {
     label: "Text",
     tools: ["case-converter", "character-counter"]
+  },
+  network: {
+    label: "Network",
+    tools: ["unix-timestamp", "encoding-converter"]
   },
   other: {
     label: "Other",
@@ -209,6 +245,7 @@ function trackToolSelect(tool) {
 }
 
 let activeGroup = "image";
+let timestampTimer = null;
 
 const MB = 1024 * 1024;
 const LIMITS = {
@@ -956,8 +993,320 @@ function initPassword() {
   generate();
 }
 
+function formatDateDetails(date) {
+  if (Number.isNaN(date.getTime())) {
+    return {
+      local: "Invalid date",
+      utc: "Invalid date",
+      iso: "Invalid date"
+    };
+  }
+  return {
+    local: date.toLocaleString(),
+    utc: date.toUTCString(),
+    iso: date.toISOString()
+  };
+}
+
+function parseDateInput(value) {
+  const raw = value.trim();
+  if (!raw) return new Date(NaN);
+
+  const normalized = raw
+    .replace(/\//g, "-")
+    .replace(/^(\d{4}-\d{1,2}-\d{1,2})\s+/, "$1T");
+
+  const date = new Date(normalized);
+  if (!Number.isNaN(date.getTime())) return date;
+
+  const match = raw.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})(?:\s+|T)(\d{1,2}):(\d{1,2})(?::(\d{1,2}))?$/);
+  if (!match) return new Date(NaN);
+
+  const [, year, month, day, hour, minute, second = "0"] = match;
+  return new Date(Number(year), Number(month) - 1, Number(day), Number(hour), Number(minute), Number(second));
+}
+
+function formatLocalInput(date) {
+  const pad = (value) => String(value).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`;
+}
+
+function timestampBody() {
+  return `
+    <div class="result-grid timestamp-current">
+      <div class="metric"><span>Current Seconds</span><strong id="currentUnixSeconds">0</strong></div>
+      <div class="metric"><span>Current Milliseconds</span><strong id="currentUnixMillis">0</strong></div>
+    </div>
+    <div class="form-grid two-col timestamp-form">
+      <div class="field">
+        <label for="timestampInput">Unix timestamp</label>
+        <input id="timestampInput" type="text" inputmode="numeric" placeholder="1719830400 or 1719830400000">
+        <small>Enter seconds or milliseconds since January 1, 1970 UTC.</small>
+      </div>
+      <div class="field">
+        <label for="dateInput">Date and time</label>
+        <div class="date-paste-control">
+          <input id="dateInput" type="text" placeholder="2026-07-01 11:58:03">
+          <input id="datePickerInput" type="datetime-local" aria-label="Choose date and time">
+        </div>
+        <small>Paste formats like 2026-07-01 11:58:03, or choose a date with the picker. Local timezone is used when no timezone is included.</small>
+      </div>
+    </div>
+    <div class="actions timestamp-actions">
+      <button class="primary" id="convertTimestamp" type="button">Convert Timestamp</button>
+      <button class="primary" id="convertDate" type="button">Convert Date</button>
+      <button class="secondary" id="useCurrentTime" type="button">Use Current Time</button>
+    </div>
+    <div class="result" id="timestampResult"></div>
+  `;
+}
+
+function initTimestamp() {
+  const seconds = document.querySelector("#currentUnixSeconds");
+  const millis = document.querySelector("#currentUnixMillis");
+  const timestampInput = document.querySelector("#timestampInput");
+  const dateInput = document.querySelector("#dateInput");
+  const datePickerInput = document.querySelector("#datePickerInput");
+  const result = document.querySelector("#timestampResult");
+
+  const updateNow = () => {
+    const now = Date.now();
+    seconds.textContent = Math.floor(now / 1000).toString();
+    millis.textContent = now.toString();
+  };
+
+  const showDate = (date) => {
+    const details = formatDateDetails(date);
+    result.innerHTML = `
+      <div class="result-grid">
+        <div class="metric"><span>Local Time</span><strong>${details.local}</strong></div>
+        <div class="metric"><span>UTC Time</span><strong>${details.utc}</strong></div>
+        <div class="metric"><span>ISO 8601</span><strong>${details.iso}</strong></div>
+      </div>
+    `;
+  };
+
+  const showTimestamp = (date) => {
+    if (Number.isNaN(date.getTime())) {
+      result.innerHTML = `<p class="notice">Enter a valid date and time.</p>`;
+      return;
+    }
+    result.innerHTML = `
+      <div class="result-grid">
+        <div class="metric"><span>Unix Seconds</span><strong>${Math.floor(date.getTime() / 1000)}</strong></div>
+        <div class="metric"><span>Unix Milliseconds</span><strong>${date.getTime()}</strong></div>
+        <div class="metric"><span>UTC Time</span><strong>${date.toUTCString()}</strong></div>
+      </div>
+    `;
+  };
+
+  document.querySelector("#convertTimestamp").addEventListener("click", () => {
+    const raw = timestampInput.value.trim();
+    const value = Number(raw);
+    if (!raw || !Number.isFinite(value)) {
+      result.innerHTML = `<p class="notice">Enter a valid Unix timestamp.</p>`;
+      return;
+    }
+    const millisValue = Math.abs(value) < 100000000000 ? value * 1000 : value;
+    showDate(new Date(millisValue));
+  });
+
+  document.querySelector("#convertDate").addEventListener("click", () => {
+    showTimestamp(parseDateInput(dateInput.value));
+  });
+
+  datePickerInput.addEventListener("change", () => {
+    const pickedDate = parseDateInput(datePickerInput.value);
+    if (!Number.isNaN(pickedDate.getTime())) {
+      dateInput.value = formatLocalInput(pickedDate);
+    }
+  });
+
+  document.querySelector("#useCurrentTime").addEventListener("click", () => {
+    const now = new Date();
+    timestampInput.value = Math.floor(now.getTime() / 1000).toString();
+    dateInput.value = formatLocalInput(now);
+    datePickerInput.value = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+    showTimestamp(now);
+  });
+
+  updateNow();
+  timestampTimer = setInterval(updateNow, 1000);
+  document.querySelector("#useCurrentTime").click();
+}
+
+function htmlEscape(text) {
+  const map = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+  return text.replace(/[&<>"']/g, (char) => map[char]);
+}
+
+function htmlUnescape(text) {
+  const textarea = document.createElement("textarea");
+  textarea.innerHTML = text;
+  return textarea.value;
+}
+
+function codeUnitToUnicodeEscape(codeUnit) {
+  return `\\u${codeUnit.toString(16).padStart(4, "0").toUpperCase()}`;
+}
+
+function textToUnicodeEscapes(text) {
+  return [...text].map((char) => {
+    if (char.length === 1) return codeUnitToUnicodeEscape(char.charCodeAt(0));
+    return codeUnitToUnicodeEscape(char.charCodeAt(0)) + codeUnitToUnicodeEscape(char.charCodeAt(1));
+  }).join("");
+}
+
+function unicodeEscapesToText(text) {
+  return text
+    .replace(/\\u\{([0-9a-fA-F]+)\}/g, (_, hex) => String.fromCodePoint(parseInt(hex, 16)))
+    .replace(/\\u([0-9a-fA-F]{4})/g, (_, hex) => String.fromCharCode(parseInt(hex, 16)));
+}
+
+function nativeToAscii(text) {
+  return Array.from(text).map((char) => {
+    const first = char.charCodeAt(0);
+    if (first <= 0x7f && char.length === 1) return char;
+    if (char.length === 1) return codeUnitToUnicodeEscape(first);
+    return codeUnitToUnicodeEscape(first) + codeUnitToUnicodeEscape(char.charCodeAt(1));
+  }).join("");
+}
+
+function asciiToNative(text) {
+  return unicodeEscapesToText(text);
+}
+
+function textToUtf8Percent(text) {
+  return [...new TextEncoder().encode(text)].map((byte) => `%${byte.toString(16).padStart(2, "0").toUpperCase()}`).join("");
+}
+
+function utf8PercentToText(text) {
+  const normalized = text.trim().replace(/\\x([0-9a-fA-F]{2})/g, "%$1").replace(/\s+/g, "");
+  if (!normalized) return "";
+  if (!/^(%[0-9a-fA-F]{2})+$/.test(normalized)) {
+    throw new Error("UTF-8 input must use %E4%BD%A0 or \\xE4\\xBD\\xA0 byte format.");
+  }
+  return decodeURIComponent(normalized);
+}
+
+function textToBase64(text) {
+  const bytesIn = new TextEncoder().encode(text);
+  let binary = "";
+  bytesIn.forEach((byte) => {
+    binary += String.fromCharCode(byte);
+  });
+  return btoa(binary);
+}
+
+function base64ToText(text) {
+  const binary = atob(text);
+  const bytesOut = Uint8Array.from(binary, (char) => char.charCodeAt(0));
+  return new TextDecoder().decode(bytesOut);
+}
+
+function textToHex(text) {
+  return [...new TextEncoder().encode(text)].map((byte) => byte.toString(16).padStart(2, "0")).join("");
+}
+
+function hexToText(text) {
+  const cleaned = text.replace(/\s+/g, "");
+  if (!cleaned || cleaned.length % 2) throw new Error("Hex input must contain an even number of characters.");
+  if (!/^[0-9a-fA-F]+$/.test(cleaned)) throw new Error("Hex input can only contain 0-9 and A-F characters.");
+  const bytesOut = new Uint8Array(cleaned.match(/.{2}/g).map((pair) => parseInt(pair, 16)));
+  return new TextDecoder().decode(bytesOut);
+}
+
+function encodingBody() {
+  return `
+    <div class="form-grid two-col">
+      <div class="field">
+        <label for="encodingInput">Input</label>
+        <textarea id="encodingInput" placeholder="Paste text, Unicode escapes, UTF-8 bytes, Base64, URL, HTML entities, or Hex..."></textarea>
+      </div>
+      <div class="field">
+        <label for="encodingOutput">Output</label>
+        <textarea id="encodingOutput" readonly></textarea>
+      </div>
+      <div class="field">
+        <label for="encodingMode">Conversion</label>
+        <select id="encodingMode">
+          <option value="unicode-encode">Unicode escape encode</option>
+          <option value="unicode-decode">Unicode escape decode</option>
+          <option value="utf8-encode">UTF-8 percent encode</option>
+          <option value="utf8-decode">UTF-8 percent decode</option>
+          <option value="native-to-ascii">Native to ASCII</option>
+          <option value="ascii-to-native">ASCII to Native</option>
+          <option value="base64-encode">Base64 encode</option>
+          <option value="base64-decode">Base64 decode</option>
+          <option value="url-encode">URL encode</option>
+          <option value="url-decode">URL decode</option>
+          <option value="html-escape">HTML escape</option>
+          <option value="html-unescape">HTML unescape</option>
+          <option value="hex-encode">Hex encode</option>
+          <option value="hex-decode">Hex decode</option>
+        </select>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="primary" id="runEncoding" type="button">Convert</button>
+      <button class="secondary" id="swapEncoding" type="button">Swap</button>
+      <button class="secondary" id="copyEncoding" type="button">Copy Output</button>
+    </div>
+    <div class="result" id="encodingResult"></div>
+  `;
+}
+
+function initEncoding() {
+  const input = document.querySelector("#encodingInput");
+  const output = document.querySelector("#encodingOutput");
+  const mode = document.querySelector("#encodingMode");
+  const result = document.querySelector("#encodingResult");
+
+  const convert = () => {
+    const text = input.value;
+    const converters = {
+      "unicode-encode": textToUnicodeEscapes,
+      "unicode-decode": unicodeEscapesToText,
+      "utf8-encode": textToUtf8Percent,
+      "utf8-decode": utf8PercentToText,
+      "native-to-ascii": nativeToAscii,
+      "ascii-to-native": asciiToNative,
+      "base64-encode": textToBase64,
+      "base64-decode": base64ToText,
+      "url-encode": encodeURIComponent,
+      "url-decode": decodeURIComponent,
+      "html-escape": htmlEscape,
+      "html-unescape": htmlUnescape,
+      "hex-encode": textToHex,
+      "hex-decode": hexToText
+    };
+
+    try {
+      output.value = converters[mode.value](text);
+      result.innerHTML = `<p class="notice">Conversion complete. Output length: ${output.value.length} characters.</p>`;
+    } catch (error) {
+      output.value = "";
+      result.innerHTML = `<p class="notice">Conversion failed: ${error.message}</p>`;
+    }
+  };
+
+  document.querySelector("#runEncoding").addEventListener("click", convert);
+  document.querySelector("#swapEncoding").addEventListener("click", () => {
+    input.value = output.value;
+    output.value = "";
+    result.innerHTML = `<p class="notice">Output moved to input.</p>`;
+  });
+  document.querySelector("#copyEncoding").addEventListener("click", () => navigator.clipboard.writeText(output.value));
+  input.addEventListener("input", convert);
+  mode.addEventListener("change", convert);
+}
+
 function renderTool() {
   const tool = getTool();
+  if (timestampTimer) {
+    clearInterval(timestampTimer);
+    timestampTimer = null;
+  }
   updateMeta(tool, Boolean(toolFromPath(window.location.pathname)));
   renderCards(toolSearch.value);
 
@@ -971,7 +1320,9 @@ function renderTool() {
     "case-converter": caseBody(),
     "character-counter": textAreaBody("Paste text to measure character length..."),
     "qr-code-generator": qrBody(),
-    "password-generator": passwordBody()
+    "password-generator": passwordBody(),
+    "unix-timestamp": timestampBody(),
+    "encoding-converter": encodingBody()
   };
 
   toolPanel.innerHTML = panelShell(tool, bodies[tool.id]);
@@ -986,6 +1337,8 @@ function renderTool() {
   if (tool.id === "case-converter") initCaseConverter();
   if (tool.id === "qr-code-generator") initQr();
   if (tool.id === "password-generator") initPassword();
+  if (tool.id === "unix-timestamp") initTimestamp();
+  if (tool.id === "encoding-converter") initEncoding();
 }
 
 toolCards.addEventListener("click", (event) => {

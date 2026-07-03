@@ -29,6 +29,8 @@ FILES=(
   character-counter
   qr-code-generator
   password-generator
+  unix-timestamp
+  encoding-converter
   privacy-policy
   terms-of-use
   contact

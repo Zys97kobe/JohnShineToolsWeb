@@ -96,6 +96,24 @@ const pages = [
     icon: "PW",
     summary: "Create strong random passwords.",
     group: "other"
+  },
+  {
+    slug: "unix-timestamp",
+    title: "Free Unix Timestamp Converter Online - Convert Epoch Time",
+    description: "Convert Unix timestamps to readable dates and convert dates to Unix epoch time online for free.",
+    ogTitle: "Unix Timestamp Converter",
+    icon: "UT",
+    summary: "Convert Unix time, milliseconds, and readable dates.",
+    group: "network"
+  },
+  {
+    slug: "encoding-converter",
+    title: "Free Encoding Converter Online - Unicode, UTF-8, Base64, URL",
+    description: "Encode and decode Unicode escapes, UTF-8 bytes, ASCII native text, Base64, URL, HTML entities, and hexadecimal text online for free.",
+    ogTitle: "Encoding Converter",
+    icon: "EC",
+    summary: "Encode and decode Unicode, UTF-8, ASCII, Base64, URL, HTML, and Hex.",
+    group: "network"
   }
 ];
 
@@ -103,6 +121,7 @@ const groupLabels = {
   image: "Image",
   file: "File",
   text: "Text",
+  network: "Network",
   other: "Other"
 };
 

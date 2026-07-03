@@ -45,6 +45,14 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://johnshinetools.com/unix-timestamp/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/encoding-converter/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://johnshinetools.com/privacy-policy/</loc>
     <priority>0.5</priority>
   </url>
@@ -54,14 +62,6 @@
   </url>
   <url>
     <loc>https://johnshinetools.com/contact/</loc>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://johnshinetools.com/privacy-policy/</loc>
-    <priority>0.5</priority>
-  </url>
-  <url>
-    <loc>https://johnshinetools.com/terms-of-use/</loc>
     <priority>0.5</priority>
   </url>
 </urlset>
