@@ -1,4 +1,6 @@
 # JohnShine Tools
+https://johnshinetools.com/
+
 
 English static site for `johnshinetools.com`, focused on high-frequency utility tools:
 
