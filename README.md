@@ -96,7 +96,3 @@ Page: [https://johnshinetools.com/qr-code-generator/](https://johnshinetools.com
 Use Password Generator to create strong random passwords in your browser. Set the length, choose the character types to include, generate a password with the browser crypto API, then copy it into a trusted password manager.
 
 Page: [https://johnshinetools.com/password-generator/](https://johnshinetools.com/password-generator/)
-
-## Notes
-
-Most tools run directly in the browser. Files and text stay on the user's device unless a tool clearly says otherwise.

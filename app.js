@@ -1247,6 +1247,74 @@ function formatDateDetails(date) {
   };
 }
 
+function showToast(message, type = "success") {
+  let toast = document.querySelector("#siteToast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "siteToast";
+    toast.className = "site-toast";
+    toast.setAttribute("role", "status");
+    toast.setAttribute("aria-live", "polite");
+    document.body.appendChild(toast);
+  }
+  window.clearTimeout(toast.hideTimer);
+  toast.textContent = message;
+  toast.className = `site-toast ${type === "error" ? "error" : "success"} show`;
+  toast.hideTimer = window.setTimeout(() => {
+    toast.classList.remove("show");
+  }, 1600);
+}
+
+function formatLocalIsoWithOffset(date) {
+  const pad = (value) => String(Math.abs(value)).padStart(2, "0");
+  const offsetMinutes = -date.getTimezoneOffset();
+  const sign = offsetMinutes >= 0 ? "+" : "-";
+  const hours = Math.floor(Math.abs(offsetMinutes) / 60);
+  const minutes = Math.abs(offsetMinutes) % 60;
+  return `${formatLocalInput(date).replace(" ", "T")}${sign}${pad(hours)}:${pad(minutes)}`;
+}
+
+function localTimeFormats(date) {
+  return [
+    {
+      label: "Default local",
+      value: date.toLocaleString()
+    },
+    {
+      label: "YYYY-MM-DD HH:mm:ss",
+      value: formatLocalInput(date)
+    },
+    {
+      label: "YYYY/MM/DD HH:mm:ss",
+      value: formatLocalInput(date).replace(/-/g, "/")
+    },
+    {
+      label: "US format",
+      value: date.toLocaleString("en-US", {
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true
+      })
+    },
+    {
+      label: "Local ISO 8601",
+      value: formatLocalIsoWithOffset(date)
+    },
+    {
+      label: "Date only",
+      value: date.toLocaleDateString()
+    },
+    {
+      label: "Time only",
+      value: date.toLocaleTimeString()
+    }
+  ];
+}
+
 function parseDateInput(value) {
   const raw = value.trim();
   if (!raw) return new Date(NaN);
@@ -1315,14 +1383,46 @@ function initTimestamp() {
   };
 
   const showDate = (date) => {
+    if (Number.isNaN(date.getTime())) {
+      result.innerHTML = `<p class="notice">Enter a valid Unix timestamp.</p>`;
+      return;
+    }
     const details = formatDateDetails(date);
+    const localRows = localTimeFormats(date)
+      .map((item) => `
+        <div class="copy-row">
+          <span class="copy-label">${htmlEscape(item.label)}</span>
+          <code>${htmlEscape(item.value)}</code>
+          <button class="secondary copy-time" type="button" data-copy="${encodeURIComponent(item.value)}">Copy</button>
+        </div>
+      `)
+      .join("");
     result.innerHTML = `
-      <div class="result-grid">
-        <div class="metric"><span>Local Time</span><strong>${details.local}</strong></div>
-        <div class="metric"><span>UTC Time</span><strong>${details.utc}</strong></div>
-        <div class="metric"><span>ISO 8601</span><strong>${details.iso}</strong></div>
+      <div class="result-grid timestamp-summary-grid">
+        <div class="metric metric--long"><span>UTC Time</span><strong>${details.utc}</strong></div>
+        <div class="metric metric--long"><span>ISO 8601</span><strong>${details.iso}</strong></div>
+        <div class="metric"><span>Unix Seconds</span><strong>${Math.floor(date.getTime() / 1000)}</strong></div>
+      </div>
+      <div class="copy-list">
+        <h3>Local time formats</h3>
+        ${localRows}
       </div>
     `;
+    result.querySelectorAll(".copy-time").forEach((button) => {
+      button.addEventListener("click", async () => {
+        window.clearTimeout(button.copyPulseTimer);
+        try {
+          await navigator.clipboard.writeText(decodeURIComponent(button.dataset.copy));
+          button.classList.add("copy-pulse");
+          showToast("Copied to clipboard");
+        } catch (error) {
+          showToast("Copy failed", "error");
+        }
+        button.copyPulseTimer = window.setTimeout(() => {
+          button.classList.remove("copy-pulse");
+        }, 240);
+      });
+    });
   };
 
   const showTimestamp = (date) => {
@@ -1331,10 +1431,10 @@ function initTimestamp() {
       return;
     }
     result.innerHTML = `
-      <div class="result-grid">
+      <div class="result-grid timestamp-conversion-grid">
         <div class="metric"><span>Unix Seconds</span><strong>${Math.floor(date.getTime() / 1000)}</strong></div>
         <div class="metric"><span>Unix Milliseconds</span><strong>${date.getTime()}</strong></div>
-        <div class="metric"><span>UTC Time</span><strong>${date.toUTCString()}</strong></div>
+        <div class="metric metric--long"><span>UTC Time</span><strong>${date.toUTCString()}</strong></div>
       </div>
     `;
   };

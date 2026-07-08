@@ -594,6 +594,115 @@ h1 {
   font-size: 18px;
 }
 
+.copy-list {
+  display: grid;
+  gap: 10px;
+  margin-top: 18px;
+}
+
+.copy-list h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.copy-row {
+  display: grid;
+  grid-template-columns: minmax(210px, max-content) minmax(0, 1fr) auto;
+  gap: 16px;
+  align-items: center;
+  padding: 10px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+}
+
+.copy-label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.copy-row code {
+  overflow: hidden;
+  color: var(--text);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.copy-row .secondary {
+  min-height: 36px;
+  padding: 8px 12px;
+}
+
+.copy-row .secondary.copy-pulse {
+  border-color: rgba(47, 125, 77, 0.35);
+  transform: scale(0.98);
+}
+
+.site-toast {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 50;
+  padding: 10px 14px;
+  border: 1px solid rgba(23, 32, 38, 0.12);
+  border-radius: 8px;
+  background: rgba(23, 32, 38, 0.96);
+  box-shadow: 0 14px 32px rgba(23, 32, 38, 0.18);
+  color: #fff;
+  font-size: 14px;
+  font-weight: 800;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(8px);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.site-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.site-toast.error {
+  background: var(--accent-2);
+}
+
+.timestamp-summary-grid {
+  grid-template-columns: minmax(360px, 1.35fr) minmax(340px, 1.25fr) minmax(210px, 0.75fr);
+  align-items: stretch;
+}
+
+.timestamp-conversion-grid {
+  grid-template-columns: minmax(220px, 0.85fr) minmax(260px, 1fr) minmax(420px, 1.45fr);
+  align-items: stretch;
+}
+
+.timestamp-summary-grid .metric,
+.timestamp-conversion-grid .metric {
+  display: flex;
+  min-height: 112px;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.timestamp-summary-grid .metric strong,
+.timestamp-conversion-grid .metric strong {
+  font-size: clamp(22px, 1.8vw, 24px);
+  line-height: 1.15;
+}
+
+.timestamp-summary-grid .metric--long strong,
+.timestamp-conversion-grid .metric--long strong {
+  overflow: hidden;
+  font-size: clamp(20px, 1.55vw, 24px);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .inline-check {
   display: inline-flex;
   align-items: center;
@@ -723,6 +832,16 @@ h1 {
     grid-template-columns: 1fr;
   }
 
+  .timestamp-summary-grid,
+  .timestamp-conversion-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .timestamp-summary-grid .metric--long strong,
+  .timestamp-conversion-grid .metric--long strong {
+    white-space: normal;
+  }
+
   .tool-list {
     position: static;
     max-height: none;
@@ -761,5 +880,20 @@ h1 {
 
   .password-output {
     flex-direction: column;
+  }
+
+  .copy-row {
+    grid-template-columns: 1fr;
+  }
+
+  .copy-row .secondary {
+    width: 100%;
+  }
+
+  .site-toast {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+    text-align: center;
   }
 }

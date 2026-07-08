@@ -17,6 +17,7 @@ FILES=(
   app.js
   robots.txt
   sitemap.xml
+  BingSiteAuth.xml
   README.md
   assets
   image-compressor
