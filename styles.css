@@ -735,6 +735,319 @@ h1 {
   box-shadow: 0 8px 22px rgba(23, 32, 38, 0.12);
 }
 
+.json-workspace textarea {
+  min-height: 260px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+}
+
+.json-workspace {
+  align-items: start;
+}
+
+.json-workspace > .field {
+  align-self: start;
+}
+
+.json-output-wrap {
+  position: relative;
+}
+
+.json-output-wrap textarea {
+  display: block;
+  padding-right: 82px;
+}
+
+.json-output-wrap .json-modal-copy {
+  top: 12px;
+  right: 32px;
+  z-index: 1;
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--muted);
+}
+
+.json-output-wrap .json-modal-copy:hover,
+.json-output-wrap .json-modal-copy.copied {
+  color: var(--text);
+}
+
+.json-actions {
+  align-items: stretch;
+}
+
+.json-tree-panel {
+  overflow: auto;
+  background:
+    linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    #111315;
+  background-size: 22px 22px;
+}
+
+.json-tree-panel h3 {
+  margin: 0 0 16px;
+  color: #f4f7f8;
+  font-size: 18px;
+}
+
+.json-graph {
+  position: relative;
+  min-width: 100%;
+}
+
+.json-graph-card {
+  position: relative;
+  overflow: visible;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 8px;
+  background: #2a2b2d;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28);
+  color: #d8dde1;
+  cursor: pointer;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+
+.json-graph .json-graph-card {
+  position: absolute;
+  z-index: 2;
+}
+
+.json-graph-card:hover {
+  border-color: rgba(96, 191, 255, 0.45);
+  transform: translateY(-1px);
+}
+
+.json-graph-card.hidden-by-collapse,
+.json-graph-lines path.hidden-by-collapse {
+  display: none;
+}
+
+.json-graph-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  overflow: visible;
+  pointer-events: none;
+}
+
+.json-graph-lines path {
+  fill: none;
+  stroke: rgba(120, 132, 140, 0.52);
+  stroke-linecap: round;
+  stroke-width: 2;
+}
+
+.json-graph-card header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 10px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.json-graph-card header strong {
+  display: inline-flex;
+  min-width: 0;
+  align-items: center;
+  gap: 8px;
+  overflow: hidden;
+  color: #f4f7f8;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.json-node-toggle {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #aab3b8;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.json-node-toggle:hover {
+  color: #f4f7f8;
+}
+
+.json-graph-card header span {
+  flex: 0 0 auto;
+  color: #aab3b8;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.json-graph-rows {
+  display: grid;
+}
+
+.json-graph-row {
+  display: grid;
+  grid-template-columns: minmax(68px, max-content) minmax(0, 1fr);
+  gap: 8px;
+  align-items: baseline;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 13px;
+}
+
+.json-graph-row:last-child {
+  border-bottom: 0;
+}
+
+.json-graph-row span {
+  color: #60bfff;
+  font-weight: 800;
+}
+
+.json-graph-row code {
+  overflow: hidden;
+  color: #d8dde1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.json-graph-row.nested code {
+  color: #c4cbd0;
+}
+
+.json-node-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(6, 8, 10, 0.66);
+}
+
+.json-node-modal {
+  width: min(760px, 100%);
+  max-height: min(760px, 86vh);
+  overflow: auto;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 8px;
+  background: #272829;
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.42);
+  color: #d8dde1;
+}
+
+.json-node-modal header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 18px 20px 10px;
+}
+
+.json-node-modal h3,
+.json-node-modal h4 {
+  margin: 0;
+  color: #f4f7f8;
+}
+
+.json-node-modal h4 {
+  padding: 18px 20px 8px;
+}
+
+.json-modal-close {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: transparent;
+  color: #c4cbd0;
+  font-size: 30px;
+  line-height: 1;
+}
+
+.json-modal-block {
+  position: relative;
+  margin: 0 20px 18px;
+  background: #1d1e20;
+}
+
+.json-modal-block pre {
+  max-height: 280px;
+  margin: 0;
+  overflow: auto;
+  padding: 20px 64px 20px 20px;
+  color: #d8dde1;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+  font-size: 14px;
+  line-height: 1.65;
+  white-space: pre-wrap;
+}
+
+.json-path-block pre {
+  padding-right: 72px;
+  white-space: pre;
+}
+
+.json-modal-copy {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  display: inline-flex;
+  width: 36px;
+  height: 36px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: transparent;
+  color: #c4cbd0;
+}
+
+.json-modal-copy:hover,
+.json-modal-copy.copied {
+  color: #f4f7f8;
+}
+
+.copy-icon {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+}
+
+.json-modal-copy::after {
+  content: attr(data-tooltip);
+  position: absolute;
+  top: 44px;
+  left: 50%;
+  z-index: 2;
+  padding: 8px 14px;
+  border-radius: 6px;
+  background: #f4f7f8;
+  color: #111315;
+  font-size: 14px;
+  font-weight: 800;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(-4px);
+  transition: opacity 120ms ease, transform 120ms ease;
+  white-space: nowrap;
+}
+
+.json-modal-copy:hover::after,
+.json-modal-copy.copied::after {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .password-output {
   display: flex;
   gap: 10px;

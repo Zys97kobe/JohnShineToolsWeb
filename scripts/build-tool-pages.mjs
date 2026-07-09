@@ -123,6 +123,15 @@ const pages = [
     icon: "EC",
     summary: "Encode and decode Unicode, UTF-8, ASCII, Base64, URL, HTML, and Hex.",
     group: "network"
+  },
+  {
+    slug: "json-formatter",
+    title: "Free JSON Formatter Online - Format, Validate and Minify JSON",
+    description: "Free JSON formatter, validator, minifier, JSON Path tester, object graph viewer, and JSON to YAML or CSV converter. Beautify and inspect JSON locally in your browser.",
+    ogTitle: "JSON Formatter",
+    icon: "JSN",
+    summary: "Format, validate, minify, query, and convert JSON locally.",
+    group: "network"
   }
 ];
 

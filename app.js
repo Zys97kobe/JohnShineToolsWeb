@@ -206,6 +206,22 @@ const tools = [
       "Choose Unicode, UTF-8, ASCII/NATIVE, Base64, URL, HTML entities, or Hex conversion.",
       "Run the conversion and copy the output for your request, page, or debugging task."
     ]
+  },
+  {
+    id: "json-formatter",
+    icon: "JSN",
+    category: "Network",
+    path: "/json-formatter/",
+    seoTitle: "Free JSON Formatter Online - Format, Validate and Minify JSON",
+    seoDescription: "Free JSON formatter, validator, minifier, JSON Path tester, object graph viewer, and JSON to YAML or CSV converter. Beautify and inspect JSON locally in your browser.",
+    title: "JSON Formatter",
+    summary: "Format, validate, minify, query, and convert JSON locally.",
+    description: "Format, validate, minify, inspect JSON as an object graph, run JSON Path queries, and convert JSON to YAML or CSV directly in your browser. Data is not uploaded to a server.",
+    instructions: [
+      "Paste JSON into the input box.",
+      "Format, minify, validate, query with JSON Path, or convert JSON to YAML or CSV.",
+      "Review the object tree, copy the result, or download the output as a .json file."
+    ]
   }
 ];
 
@@ -219,7 +235,7 @@ document.querySelector("#year").textContent = new Date().getFullYear();
 const siteBaseUrl = "https://johnshinetools.com";
 const homeMeta = {
   title: "JohnShine Tools - Free Online Tools for Images, PDFs, Text, Network and Security",
-  description: "Use free online tools to compress images, convert images, merge PDFs, split PDFs, count words, convert text case, generate QR codes, create passwords, and convert timestamps or encodings.",
+  description: "Use free online tools to compress images, convert images, merge PDFs, split PDFs, count words, convert text case, generate QR codes, create passwords, convert timestamps, format JSON, or convert encodings.",
   url: `${siteBaseUrl}/`
 };
 
@@ -238,7 +254,7 @@ const toolGroups = {
   },
   network: {
     label: "Network",
-    tools: ["unix-timestamp", "encoding-converter"]
+    tools: ["unix-timestamp", "encoding-converter", "json-formatter"]
   },
   other: {
     label: "Other",
@@ -1479,6 +1495,10 @@ function htmlEscape(text) {
   return text.replace(/[&<>"']/g, (char) => map[char]);
 }
 
+function htmlAttr(text) {
+  return htmlEscape(String(text));
+}
+
 function htmlUnescape(text) {
   const textarea = document.createElement("textarea");
   textarea.innerHTML = text;
@@ -1553,6 +1573,487 @@ function hexToText(text) {
   if (!/^[0-9a-fA-F]+$/.test(cleaned)) throw new Error("Hex input can only contain 0-9 and A-F characters.");
   const bytesOut = new Uint8Array(cleaned.match(/.{2}/g).map((pair) => parseInt(pair, 16)));
   return new TextDecoder().decode(bytesOut);
+}
+
+function copyIconSvg(type = "copy") {
+  if (type === "check") {
+    return `<svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.2 4.2L19 7"></path></svg>`;
+  }
+  return `<svg class="copy-icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="8" y="8" width="11" height="11" rx="2"></rect><rect x="5" y="5" width="11" height="11" rx="2"></rect></svg>`;
+}
+
+function jsonFormatterBody() {
+  return `
+    <div class="form-grid two-col json-workspace">
+      <div class="field">
+        <label for="jsonInput">JSON input</label>
+        <textarea id="jsonInput" spellcheck="false" placeholder='{"name":"JohnShine Tools","items":[1,2,3]}'></textarea>
+        <small>Processing happens locally in your browser. JSON is not uploaded to a server.</small>
+      </div>
+      <div class="field">
+        <label for="jsonOutput">Result</label>
+        <div class="json-output-wrap">
+          <button class="json-modal-copy json-output-copy" id="copyJsonOutput" type="button" data-tooltip="Copy" aria-label="Copy result">${copyIconSvg()}</button>
+          <textarea id="jsonOutput" spellcheck="false" readonly></textarea>
+        </div>
+      </div>
+      <div class="field">
+        <label for="jsonPathInput">JSON Path query</label>
+        <input id="jsonPathInput" type="text" value="$" placeholder="$.items[0] or $.users[*].name">
+        <small>Supports $, dot properties, bracket properties, numeric indexes, and * wildcard.</small>
+      </div>
+    </div>
+    <div class="actions json-actions">
+      <button class="primary" id="formatJson" type="button">Format JSON</button>
+      <button class="secondary" id="minifyJson" type="button">Minify JSON</button>
+      <button class="secondary" id="validateJson" type="button">Validate</button>
+      <button class="secondary" id="jsonToYaml" type="button">JSON to YAML</button>
+      <button class="secondary" id="jsonToCsv" type="button">JSON to CSV</button>
+      <button class="secondary" id="runJsonPath" type="button">Run JSON Path</button>
+      <button class="secondary" id="downloadJsonOutput" type="button" title="Download the current Result output">Download Result</button>
+    </div>
+    <div class="result" id="jsonResult"></div>
+    <div class="result json-tree-panel" id="jsonTree"></div>
+  `;
+}
+
+function jsonErrorDetails(error, source) {
+  const match = error.message.match(/position\s+(\d+)/i);
+  if (!match) return error.message;
+  const position = Number(match[1]);
+  const before = source.slice(0, position);
+  const lines = before.split("\n");
+  return `${error.message}. Line ${lines.length}, column ${lines.at(-1).length + 1}.`;
+}
+
+function parseJsonInput(source) {
+  try {
+    return { ok: true, value: JSON.parse(source) };
+  } catch (error) {
+    return { ok: false, error: jsonErrorDetails(error, source) };
+  }
+}
+
+function jsonDepth(value) {
+  if (value === null || typeof value !== "object") return 0;
+  const children = Array.isArray(value) ? value : Object.values(value);
+  if (!children.length) return 1;
+  return 1 + Math.max(...children.map(jsonDepth));
+}
+
+function jsonNodeCount(value) {
+  if (value === null || typeof value !== "object") return 1;
+  const children = Array.isArray(value) ? value : Object.values(value);
+  return 1 + children.reduce((sum, child) => sum + jsonNodeCount(child), 0);
+}
+
+function yamlScalar(value) {
+  if (value === null) return "null";
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  return JSON.stringify(String(value));
+}
+
+function jsonToYaml(value, indent = 0) {
+  const space = "  ".repeat(indent);
+  if (value === null || typeof value !== "object") return `${space}${yamlScalar(value)}`;
+  if (Array.isArray(value)) {
+    if (!value.length) return `${space}[]`;
+    return value.map((item) => {
+      if (item !== null && typeof item === "object") {
+        return `${space}-\n${jsonToYaml(item, indent + 1)}`;
+      }
+      return `${space}- ${yamlScalar(item)}`;
+    }).join("\n");
+  }
+  const entries = Object.entries(value);
+  if (!entries.length) return `${space}{}`;
+  return entries.map(([key, item]) => {
+    const safeKey = /^[A-Za-z0-9_-]+$/.test(key) ? key : JSON.stringify(key);
+    if (item !== null && typeof item === "object") {
+      return `${space}${safeKey}:\n${jsonToYaml(item, indent + 1)}`;
+    }
+    return `${space}${safeKey}: ${yamlScalar(item)}`;
+  }).join("\n");
+}
+
+function csvCell(value) {
+  const text = value !== null && typeof value === "object" ? JSON.stringify(value) : String(value ?? "");
+  return /[",\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+}
+
+function jsonToCsv(value) {
+  const rows = Array.isArray(value) ? value : Object.values(value || {});
+  if (!Array.isArray(rows) || !rows.length) throw new Error("CSV conversion needs a JSON array or an object containing rows.");
+  if (rows.every((row) => row !== null && typeof row === "object" && !Array.isArray(row))) {
+    const columns = [...new Set(rows.flatMap((row) => Object.keys(row)))];
+    return [
+      columns.map(csvCell).join(","),
+      ...rows.map((row) => columns.map((column) => csvCell(row[column])).join(","))
+    ].join("\n");
+  }
+  return ["value", ...rows.map(csvCell)].join("\n");
+}
+
+function parseJsonPath(path) {
+  const source = path.trim();
+  if (!source || source[0] !== "$") throw new Error("JSON Path must start with $.");
+  const tokens = [];
+  let index = 1;
+  while (index < source.length) {
+    if (source[index] === ".") {
+      index += 1;
+      if (source[index] === "*") {
+        tokens.push("*");
+        index += 1;
+        continue;
+      }
+      const match = source.slice(index).match(/^[A-Za-z_$][\w$-]*/);
+      if (!match) throw new Error("Invalid dot property in JSON Path.");
+      tokens.push(match[0]);
+      index += match[0].length;
+      continue;
+    }
+    if (source[index] === "[") {
+      const close = source.indexOf("]", index);
+      if (close === -1) throw new Error("Missing ] in JSON Path.");
+      const raw = source.slice(index + 1, close).trim();
+      if (raw === "*") tokens.push("*");
+      else if (/^\d+$/.test(raw)) tokens.push(Number(raw));
+      else {
+        const quoted = raw.match(/^['"](.+)['"]$/);
+        if (!quoted) throw new Error("Bracket properties must use a number, *, or quoted key.");
+        tokens.push(quoted[1]);
+      }
+      index = close + 1;
+      continue;
+    }
+    throw new Error("Unsupported JSON Path syntax.");
+  }
+  return tokens;
+}
+
+function runJsonPath(value, path) {
+  const tokens = parseJsonPath(path);
+  let matches = [value];
+  tokens.forEach((token) => {
+    const next = [];
+    matches.forEach((item) => {
+      if (token === "*") {
+        if (Array.isArray(item)) next.push(...item);
+        else if (item && typeof item === "object") next.push(...Object.values(item));
+      } else if (item != null && typeof item === "object" && token in item) {
+        next.push(item[token]);
+      }
+    });
+    matches = next;
+  });
+  return matches.length === 1 ? matches[0] : matches;
+}
+
+function jsonValuePreview(value) {
+  if (value === null) return "null";
+  if (typeof value === "string") return value.length > 28 ? `${value.slice(0, 28)}...` : value;
+  if (typeof value === "number" || typeof value === "boolean") return String(value);
+  const count = Array.isArray(value) ? value.length : Object.keys(value).length;
+  return Array.isArray(value) ? `[${count} item${count === 1 ? "" : "s"}]` : `{${count} key${count === 1 ? "" : "s"}}`;
+}
+
+function jsonPathSegment(key) {
+  if (typeof key === "number" || /^\d+$/.test(String(key))) return `[${key}]`;
+  return /^[A-Za-z_$][\w$]*$/.test(String(key)) ? `.${key}` : `[${JSON.stringify(String(key))}]`;
+}
+
+function collectJsonGraph(value, label = "root", depth = 0, state = { nextId: 1, nodes: [], maxNodes: 500 }, parentId = null, path = "$", ancestors = []) {
+  const id = state.nextId;
+  state.nextId += 1;
+  const isObject = value !== null && typeof value === "object";
+  const entries = isObject ? (Array.isArray(value) ? value.map((item, index) => [index, item]) : Object.entries(value)) : [];
+  const node = {
+    id,
+    parentId,
+    ancestors,
+    path,
+    value,
+    label: String(label),
+    depth,
+    type: Array.isArray(value) ? "Array" : isObject ? "Object" : typeof value,
+    rows: [],
+    childIds: [],
+    width: 260,
+    height: 56 + Math.max(entries.length, 1) * 34
+  };
+  state.nodes.push(node);
+
+  entries.forEach(([key, item]) => {
+    if (item !== null && typeof item === "object" && state.nodes.length < state.maxNodes) {
+      const child = collectJsonGraph(item, key, depth + 1, state, id, `${path}${jsonPathSegment(key)}`, [...ancestors, id]);
+      node.childIds.push(child.id);
+      node.rows.push({ key: String(key), value: jsonValuePreview(item), nested: true });
+    } else {
+      node.rows.push({ key: String(key), value: jsonValuePreview(item), nested: false });
+    }
+  });
+  if (entries.some(([, item]) => item !== null && typeof item === "object") && state.nodes.length >= state.maxNodes) {
+    node.rows.push({ key: "...", value: "graph node limit reached", nested: false });
+  }
+  return node;
+}
+
+function renderJsonGraph(value) {
+  const state = { nextId: 1, nodes: [], maxNodes: 500 };
+  collectJsonGraph(value, "root", 0, state);
+  const columns = new Map();
+  state.nodes.forEach((node) => {
+    if (!columns.has(node.depth)) columns.set(node.depth, []);
+    columns.get(node.depth).push(node);
+  });
+  const columnGap = 360;
+  const rowGap = 36;
+  const topPad = 34;
+  const leftPad = 34;
+  [...columns.entries()].forEach(([depth, nodes]) => {
+    let y = topPad;
+    nodes.forEach((node) => {
+      node.x = leftPad + depth * columnGap;
+      node.y = y;
+      y += node.height + rowGap;
+    });
+  });
+  const maxX = Math.max(...state.nodes.map((node) => node.x + node.width)) + leftPad;
+  const maxY = Math.max(...state.nodes.map((node) => node.y + node.height)) + topPad;
+  const nodeById = new Map(state.nodes.map((node) => [node.id, node]));
+  const paths = state.nodes
+    .filter((node) => node.parentId)
+    .map((node) => {
+      const parent = nodeById.get(node.parentId);
+      const startX = parent.x + parent.width;
+      const startY = parent.y + parent.height / 2;
+      const endX = node.x;
+      const endY = node.y + node.height / 2;
+      const curve = Math.max(80, (endX - startX) * 0.5);
+      return `<path data-child-id="${node.id}" data-ancestor-ids="${htmlAttr(node.ancestors.join(" "))}" d="M ${startX} ${startY} C ${startX + curve} ${startY}, ${endX - curve} ${endY}, ${endX} ${endY}" />`;
+    })
+    .join("");
+  const cards = state.nodes.map((node) => `
+    <article class="json-graph-card" data-node-id="${node.id}" data-parent-id="${node.parentId || ""}" data-ancestor-ids="${htmlAttr(node.ancestors.join(" "))}" data-json="${htmlAttr(encodeURIComponent(JSON.stringify(node.value, null, 2)))}" data-path="${htmlAttr(node.path)}" style="left:${node.x}px;top:${node.y}px;width:${node.width}px;min-height:${node.height}px">
+      <header>
+        <strong>${node.childIds.length ? `<button class="json-node-toggle" type="button" aria-label="Collapse node" data-node-id="${node.id}">-</button>` : ""}${htmlEscape(node.label)}</strong>
+        <span>${htmlEscape(node.type)}${node.childIds.length ? ` · ${node.childIds.length}` : ""}</span>
+      </header>
+      <div class="json-graph-rows">
+        ${node.rows.map((row) => `
+          <div class="json-graph-row ${row.nested ? "nested" : ""}">
+            <span>${htmlEscape(row.key)}</span>
+            <code>${htmlEscape(row.value)}</code>
+          </div>
+        `).join("")}
+      </div>
+    </article>
+  `).join("");
+  return `
+    <div class="json-graph" style="width:${maxX}px;height:${maxY}px">
+      <svg class="json-graph-lines" width="${maxX}" height="${maxY}" viewBox="0 0 ${maxX} ${maxY}" aria-hidden="true">${paths}</svg>
+      ${cards}
+    </div>
+  `;
+}
+
+function jsonNodeModalBody(json, path) {
+  return `
+    <div class="json-node-modal-backdrop" id="jsonNodeModal">
+      <section class="json-node-modal" role="dialog" aria-modal="true" aria-labelledby="jsonNodeModalTitle">
+        <header>
+          <h3 id="jsonNodeModalTitle">Content</h3>
+          <button class="json-modal-close" type="button" aria-label="Close">×</button>
+        </header>
+        <div class="json-modal-block">
+          <button class="json-modal-copy" type="button" data-copy="${htmlAttr(encodeURIComponent(json))}" data-tooltip="Copy" aria-label="Copy JSON">${copyIconSvg()}</button>
+          <pre>${htmlEscape(json)}</pre>
+        </div>
+        <h4>JSON Path</h4>
+        <div class="json-modal-block json-path-block">
+          <button class="json-modal-copy" type="button" data-copy="${htmlAttr(encodeURIComponent(path))}" data-tooltip="Copy" aria-label="Copy JSON Path">${copyIconSvg()}</button>
+          <pre>${htmlEscape(path)}</pre>
+        </div>
+      </section>
+    </div>
+  `;
+}
+
+async function copyWithIconFeedback(copyButton, text) {
+  window.clearTimeout(copyButton.copyIconTimer);
+  try {
+    await navigator.clipboard.writeText(text);
+    copyButton.classList.add("copied");
+    copyButton.dataset.tooltip = "Copied";
+    copyButton.innerHTML = copyIconSvg("check");
+  } catch (error) {
+    copyButton.dataset.tooltip = "Copy failed";
+    showToast("Copy failed", "error");
+  }
+  copyButton.copyIconTimer = window.setTimeout(() => {
+    copyButton.classList.remove("copied");
+    copyButton.dataset.tooltip = "Copy";
+    copyButton.innerHTML = copyIconSvg();
+  }, 1300);
+}
+
+function bindJsonGraphInteractions(container) {
+  const updateVisibility = () => {
+    const collapsed = new Set([...container.querySelectorAll(".json-graph-card.collapsed")].map((card) => card.dataset.nodeId));
+    container.querySelectorAll("[data-ancestor-ids]").forEach((item) => {
+      const ancestors = item.dataset.ancestorIds ? item.dataset.ancestorIds.split(" ") : [];
+      item.classList.toggle("hidden-by-collapse", ancestors.some((id) => collapsed.has(id)));
+    });
+  };
+
+  container.querySelectorAll(".json-node-toggle").forEach((button) => {
+    button.addEventListener("click", (event) => {
+      event.stopPropagation();
+      const card = event.target.closest(".json-graph-card");
+      const collapsed = card.classList.toggle("collapsed");
+      button.textContent = collapsed ? "+" : "-";
+      button.setAttribute("aria-label", collapsed ? "Expand node" : "Collapse node");
+      updateVisibility();
+    });
+  });
+
+  container.querySelectorAll(".json-graph-card").forEach((card) => {
+    card.addEventListener("click", () => {
+      const json = decodeURIComponent(card.dataset.json);
+      const path = card.dataset.path;
+      document.querySelector("#jsonNodeModal")?.remove();
+      document.body.insertAdjacentHTML("beforeend", jsonNodeModalBody(json, path));
+      const modal = document.querySelector("#jsonNodeModal");
+      modal.querySelector(".json-modal-close").addEventListener("click", () => modal.remove());
+      modal.addEventListener("click", (event) => {
+        if (event.target === modal) modal.remove();
+      });
+      modal.querySelectorAll(".json-modal-copy").forEach((copyButton) => {
+        copyButton.addEventListener("click", async () => {
+          await copyWithIconFeedback(copyButton, decodeURIComponent(copyButton.dataset.copy));
+        });
+      });
+    });
+  });
+}
+
+function initJsonFormatter() {
+  const input = document.querySelector("#jsonInput");
+  const output = document.querySelector("#jsonOutput");
+  const pathInput = document.querySelector("#jsonPathInput");
+  const result = document.querySelector("#jsonResult");
+  const tree = document.querySelector("#jsonTree");
+  let currentOutputFormat = "json";
+
+  const parseOrShow = () => {
+    const source = input.value.trim();
+    if (!source) {
+      result.innerHTML = `<p class="notice">Paste JSON first.</p>`;
+      tree.innerHTML = "";
+      return null;
+    }
+    const parsed = parseJsonInput(source);
+    if (!parsed.ok) {
+      output.value = "";
+      result.innerHTML = `<p class="notice">Invalid JSON: ${htmlEscape(parsed.error)}</p>`;
+      tree.innerHTML = "";
+      return null;
+    }
+    return parsed.value;
+  };
+
+  const showJsonSummary = (value, message = "JSON is valid.") => {
+    result.innerHTML = `
+      <div class="result-grid compact-metrics">
+        <div class="metric"><span>Status</span><strong>${htmlEscape(message)}</strong></div>
+        <div class="metric"><span>Object depth</span><strong>${jsonDepth(value)}</strong></div>
+        <div class="metric"><span>Nodes</span><strong>${jsonNodeCount(value)}</strong></div>
+      </div>
+    `;
+    tree.innerHTML = `<h3>Object graph</h3>${renderJsonGraph(value)}`;
+    bindJsonGraphInteractions(tree);
+  };
+
+  const format = () => {
+    const value = parseOrShow();
+    if (value === null) return;
+    output.value = JSON.stringify(value, null, 2);
+    currentOutputFormat = "json";
+    showJsonSummary(value, "Formatted");
+  };
+
+  document.querySelector("#formatJson").addEventListener("click", format);
+  document.querySelector("#minifyJson").addEventListener("click", () => {
+    const value = parseOrShow();
+    if (value === null) return;
+    output.value = JSON.stringify(value);
+    currentOutputFormat = "json";
+    showJsonSummary(value, "Minified");
+  });
+  document.querySelector("#validateJson").addEventListener("click", () => {
+    const value = parseOrShow();
+    if (value === null) return;
+    showJsonSummary(value);
+  });
+  document.querySelector("#jsonToYaml").addEventListener("click", () => {
+    const value = parseOrShow();
+    if (value === null) return;
+    output.value = jsonToYaml(value);
+    currentOutputFormat = "yaml";
+    showJsonSummary(value, "Converted to YAML");
+  });
+  document.querySelector("#jsonToCsv").addEventListener("click", () => {
+    const value = parseOrShow();
+    if (value === null) return;
+    try {
+      output.value = jsonToCsv(value);
+      currentOutputFormat = "csv";
+      showJsonSummary(value, "Converted to CSV");
+    } catch (error) {
+      result.innerHTML = `<p class="notice">CSV conversion failed: ${htmlEscape(error.message)}</p>`;
+    }
+  });
+  document.querySelector("#runJsonPath").addEventListener("click", () => {
+    const value = parseOrShow();
+    if (value === null) return;
+    try {
+      const queryResult = runJsonPath(value, pathInput.value);
+      output.value = JSON.stringify(queryResult, null, 2);
+      currentOutputFormat = "json";
+      showJsonSummary(queryResult, "JSON Path result");
+    } catch (error) {
+      result.innerHTML = `<p class="notice">JSON Path failed: ${htmlEscape(error.message)}</p>`;
+    }
+  });
+  document.querySelector("#copyJsonOutput").addEventListener("click", async (event) => {
+    await copyWithIconFeedback(event.currentTarget, output.value);
+  });
+  document.querySelector("#downloadJsonOutput").addEventListener("click", () => {
+    const types = {
+      json: { extension: "json", mime: "application/json" },
+      yaml: { extension: "yaml", mime: "application/x-yaml" },
+      csv: { extension: "csv", mime: "text/csv" }
+    };
+    let value = output.value;
+    if (!value) {
+      const parsed = parseOrShow();
+      if (parsed === null) return;
+      value = JSON.stringify(parsed, null, 2);
+      currentOutputFormat = "json";
+      output.value = value;
+      showJsonSummary(parsed, "Formatted");
+    }
+    const fileType = types[currentOutputFormat] || { extension: "txt", mime: "text/plain" };
+    downloadBlob(new Blob([value], { type: fileType.mime }), `johnshinetools-result.${fileType.extension}`);
+  });
+  input.addEventListener("input", () => {
+    if (!input.value.trim()) {
+      output.value = "";
+      result.innerHTML = "";
+      tree.innerHTML = "";
+    }
+  });
 }
 
 function encodingBody() {
@@ -1663,6 +2164,7 @@ function renderTool() {
     "qr-code-generator": qrBody(),
     "password-generator": passwordBody(),
     "unix-timestamp": timestampBody(),
+    "json-formatter": jsonFormatterBody(),
     "encoding-converter": encodingBody()
   };
 
@@ -1680,6 +2182,7 @@ function renderTool() {
   if (tool.id === "qr-code-generator") initQr();
   if (tool.id === "password-generator") initPassword();
   if (tool.id === "unix-timestamp") initTimestamp();
+  if (tool.id === "json-formatter") initJsonFormatter();
   if (tool.id === "encoding-converter") initEncoding();
 }
 

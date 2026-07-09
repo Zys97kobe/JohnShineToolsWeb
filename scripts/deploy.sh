@@ -33,6 +33,7 @@ FILES=(
   password-generator
   unix-timestamp
   encoding-converter
+  json-formatter
   privacy-policy
   terms-of-use
   contact

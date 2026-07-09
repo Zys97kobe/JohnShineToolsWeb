@@ -83,6 +83,12 @@ Use Encoding Converter to encode and decode common web formats. Paste text, choo
 
 Page: [https://johnshinetools.com/encoding-converter/](https://johnshinetools.com/encoding-converter/)
 
+#### JSON Formatter
+
+Use JSON Formatter to format, minify, validate, inspect, query, and convert JSON directly in your browser. Paste JSON, find syntax errors with line and column details, beautify or compress the data, run JSON Path queries, view a collapsible object tree, convert JSON to YAML or CSV, copy the result, or download it as a `.json` file.
+
+Page: [https://johnshinetools.com/json-formatter/](https://johnshinetools.com/json-formatter/)
+
 ### Other Tools
 
 #### QR Code Generator
