@@ -63,12 +63,12 @@ const pages = [
   },
   {
     slug: "word-counter",
-    title: "Free Word Counter Online - Count Words and Characters",
-    description: "Count words, characters, sentences, and reading time online for free.",
+    title: "Free Word Counter Online - Words, Sentences and Reading Time",
+    description: "Count words, sentences, paragraphs, characters, reading time, and speaking time online for free.",
     ogTitle: "Word Counter",
     icon: "WC",
-    summary: "Count words, characters, sentences, and reading time.",
-    group: "file"
+    summary: "Analyze words, sentences, reading time, and speaking time.",
+    group: "text"
   },
   {
     slug: "case-converter",
@@ -82,10 +82,10 @@ const pages = [
   {
     slug: "character-counter",
     title: "Free Character Counter Online - Count Text Length",
-    description: "Count characters, bytes, lines, and paragraphs online for free.",
+    description: "Count Unicode characters, UTF-8 bytes, UTF-16 units, lines, and paragraphs online for free.",
     ogTitle: "Character Counter",
     icon: "CH",
-    summary: "Count characters, bytes, lines, and paragraphs.",
+    summary: "Measure Unicode characters, bytes, lines, and paragraphs.",
     group: "text"
   },
   {
@@ -95,7 +95,7 @@ const pages = [
     ogTitle: "QR Code Generator",
     icon: "QR",
     summary: "Generate a downloadable QR code.",
-    group: "other"
+    group: "developer"
   },
   {
     slug: "password-generator",
@@ -104,7 +104,7 @@ const pages = [
     ogTitle: "Password Generator",
     icon: "PW",
     summary: "Create strong random passwords.",
-    group: "other"
+    group: "security"
   },
   {
     slug: "unix-timestamp",
@@ -113,7 +113,7 @@ const pages = [
     ogTitle: "Unix Timestamp Converter",
     icon: "UT",
     summary: "Convert Unix time, milliseconds, and readable dates.",
-    group: "network"
+    group: "date"
   },
   {
     slug: "encoding-converter",
@@ -122,7 +122,7 @@ const pages = [
     ogTitle: "Encoding Converter",
     icon: "EC",
     summary: "Encode and decode Unicode, UTF-8, ASCII, Base64, URL, HTML, and Hex.",
-    group: "network"
+    group: "developer"
   },
   {
     slug: "json-formatter",
@@ -131,7 +131,97 @@ const pages = [
     ogTitle: "JSON Formatter",
     icon: "JSN",
     summary: "Format, validate, minify, query, and convert JSON locally.",
-    group: "network"
+    group: "data"
+  },
+  {
+    slug: "csv-viewer-cleaner",
+    title: "Free CSV Viewer & Cleaner Online - Preview and Clean CSV",
+    description: "View, clean, deduplicate, trim, and download CSV files online for free. CSV data is processed locally in your browser.",
+    ogTitle: "CSV Viewer & Cleaner",
+    icon: "CSV",
+    summary: "Preview, trim, deduplicate, and clean CSV data locally.",
+    group: "data"
+  },
+  {
+    slug: "hash-generator",
+    title: "Free Hash Generator Online - SHA-256, SHA-384 and SHA-512",
+    description: "Generate SHA-1, SHA-256, SHA-384, and SHA-512 hashes from text online for free using your browser's Web Crypto API.",
+    ogTitle: "Hash Generator",
+    icon: "HG",
+    summary: "Generate SHA hashes from text with Web Crypto.",
+    group: "developer"
+  },
+  {
+    slug: "file-checksum",
+    title: "Free File Checksum Online - SHA-256 and SHA-512",
+    description: "Calculate and verify SHA-1, SHA-256, SHA-384, or SHA-512 file checksums locally in your browser for free.",
+    ogTitle: "File Checksum",
+    icon: "FC",
+    summary: "Calculate and verify SHA checksums for local files.",
+    group: "developer"
+  },
+  {
+    slug: "table-to-markdown-html",
+    title: "Table to Markdown or HTML Converter Online",
+    description: "Convert CSV or TSV table data to Markdown or HTML tables online for free. Preview and copy the result in your browser.",
+    ogTitle: "Table to Markdown / HTML",
+    icon: "TBL",
+    summary: "Convert CSV or TSV data into Markdown or HTML tables.",
+    group: "data"
+  },
+  {
+    slug: "random-token-generator",
+    title: "Secure Random Token Generator Online",
+    description: "Generate secure random hexadecimal, alphanumeric, URL-safe, or Base64URL tokens online using browser cryptography.",
+    ogTitle: "Random Token Generator",
+    icon: "RT",
+    summary: "Create cryptographically secure random tokens.",
+    group: "security"
+  },
+  {
+    slug: "csp-header-generator",
+    title: "Content Security Policy Header Generator Online",
+    description: "Build a Content-Security-Policy header with common CSP directives and copy the generated security header online for free.",
+    ogTitle: "CSP Header Generator",
+    icon: "CSP",
+    summary: "Build a Content-Security-Policy header from common directives.",
+    group: "security"
+  },
+  {
+    slug: "time-zone-converter",
+    title: "Free Time Zone Converter Online - Convert Date and Time",
+    description: "Convert a date and time between IANA time zones online for free, including local time, UTC, and daylight saving offsets.",
+    ogTitle: "Time Zone Converter",
+    icon: "TZ",
+    summary: "Convert dates and times between IANA time zones.",
+    group: "date"
+  },
+  {
+    slug: "business-days-calculator",
+    title: "Free Business Days Calculator Online",
+    description: "Count business days between two dates online. Exclude weekends and optional custom holidays with clear inclusive date settings.",
+    ogTitle: "Business Days Calculator",
+    icon: "BD",
+    summary: "Count weekdays between dates and exclude custom holidays.",
+    group: "date"
+  },
+  {
+    slug: "color-converter",
+    title: "HEX, RGB and HSL Color Converter Online",
+    description: "Convert colors between HEX, RGB, and HSL formats online for free. Preview colors and copy CSS-ready values instantly.",
+    ogTitle: "HEX / RGB / HSL Converter",
+    icon: "CLR",
+    summary: "Convert and preview HEX, RGB, and HSL colors.",
+    group: "color"
+  },
+  {
+    slug: "contrast-checker",
+    title: "WCAG Color Contrast Checker Online",
+    description: "Check foreground and background color contrast ratios against WCAG AA and AAA text thresholds online for free.",
+    ogTitle: "Contrast Checker",
+    icon: "CCK",
+    summary: "Check color contrast against WCAG AA and AAA thresholds.",
+    group: "color"
   }
 ];
 
@@ -139,8 +229,22 @@ const groupLabels = {
   image: "Image",
   file: "File",
   text: "Text",
-  network: "Network",
-  other: "Other"
+  developer: "Developer",
+  data: "Data",
+  security: "Security",
+  date: "Date",
+  color: "Color"
+};
+
+const groupOrder = {
+  image: ["image-compressor", "image-converter", "image-resizer"],
+  file: ["pdf-merge", "pdf-split", "pdf-compressor"],
+  text: ["word-counter", "character-counter", "case-converter"],
+  developer: ["encoding-converter", "hash-generator", "file-checksum", "qr-code-generator"],
+  data: ["json-formatter", "csv-viewer-cleaner", "table-to-markdown-html"],
+  security: ["password-generator", "random-token-generator", "csp-header-generator"],
+  date: ["unix-timestamp", "time-zone-converter", "business-days-calculator"],
+  color: ["color-converter", "contrast-checker"]
 };
 
 function escapeAttr(value) {
@@ -150,6 +254,7 @@ function escapeAttr(value) {
 function staticCardsFor(page) {
   return pages
     .filter((item) => item.group === page.group)
+    .sort((left, right) => groupOrder[page.group].indexOf(left.slug) - groupOrder[page.group].indexOf(right.slug))
     .map((item) => `            <a class="tool-card ${item.slug === page.slug ? "active" : ""}" href="/${item.slug}/" data-tool="${item.slug}">
               <span class="tool-icon">${item.icon}</span>
               <span>

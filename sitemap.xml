@@ -61,6 +61,46 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://johnshinetools.com/csv-viewer-cleaner/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/hash-generator/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/file-checksum/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/table-to-markdown-html/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/random-token-generator/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/csp-header-generator/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/time-zone-converter/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/business-days-calculator/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/color-converter/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://johnshinetools.com/contrast-checker/</loc>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://johnshinetools.com/privacy-policy/</loc>
     <priority>0.5</priority>
   </url>

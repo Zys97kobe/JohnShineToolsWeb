@@ -15,7 +15,7 @@
     <link rel="icon" type="image/png" href="/assets/favicon-32.png?v=20260706" sizes="32x32">
     <link rel="icon" type="image/png" href="/assets/favicon-48.png?v=20260706" sizes="48x48">
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-    <link rel="stylesheet" href="/styles.css?v=20260709-json-seo-description">
+    <link rel="stylesheet" href="/styles.css?v=20260710-expanded-tools">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-R2X7MDZRHJ"></script>
@@ -36,8 +36,11 @@
         <a class="top-nav-item" href="/image-compressor/" data-group="image">Image</a>
         <a class="top-nav-item" href="/pdf-merge/" data-group="file">File</a>
         <a class="top-nav-item" href="/case-converter/" data-group="text">Text</a>
-        <a class="top-nav-item" href="/unix-timestamp/" data-group="network">Network</a>
-        <a class="top-nav-item" href="/qr-code-generator/" data-group="other">Other</a>
+        <a class="top-nav-item" href="/encoding-converter/" data-group="developer">Developer</a>
+        <a class="top-nav-item" href="/json-formatter/" data-group="data">Data</a>
+        <a class="top-nav-item" href="/password-generator/" data-group="security">Security</a>
+        <a class="top-nav-item" href="/unix-timestamp/" data-group="date">Date</a>
+        <a class="top-nav-item" href="/color-converter/" data-group="color">Color</a>
       </nav>
     </header>
 
@@ -46,29 +49,36 @@
         <div class="intro-copy">
           <p class="eyebrow">Free online tools</p>
           <h1 class="head-title">Your Free Online Tools Library</h1>
-          <p>Run common image, PDF, writing, network, and security tasks directly in your browser. Your files and text stay on your device unless a tool clearly says otherwise.</p>
+          <p>Run image, PDF, writing, developer, data, security, date, and color tasks directly in your browser. Your files and text stay on your device unless a tool clearly says otherwise.</p>
         </div>
       </section>
 
       <section class="workspace" aria-label="Tools workspace">
         <aside class="tool-list">
           <div class="tool-list-head">
-            <h2><span id="toolGroupTitle">Other</span> Tools</h2>
+            <h2><span id="toolGroupTitle">Security</span> Tools</h2>
             <input id="toolSearch" type="search" placeholder="Search tools" autocomplete="off">
           </div>
           <div id="toolCards" class="tool-cards">
-            <a class="tool-card " href="/qr-code-generator/" data-tool="qr-code-generator">
-              <span class="tool-icon">QR</span>
-              <span>
-                <strong>QR Code Generator</strong>
-                <span>Generate a downloadable QR code.</span>
-              </span>
-            </a>
             <a class="tool-card active" href="/password-generator/" data-tool="password-generator">
               <span class="tool-icon">PW</span>
               <span>
                 <strong>Password Generator</strong>
                 <span>Create strong random passwords.</span>
+              </span>
+            </a>
+            <a class="tool-card " href="/random-token-generator/" data-tool="random-token-generator">
+              <span class="tool-icon">RT</span>
+              <span>
+                <strong>Random Token Generator</strong>
+                <span>Create cryptographically secure random tokens.</span>
+              </span>
+            </a>
+            <a class="tool-card " href="/csp-header-generator/" data-tool="csp-header-generator">
+              <span class="tool-icon">CSP</span>
+              <span>
+                <strong>CSP Header Generator</strong>
+                <span>Build a Content-Security-Policy header from common directives.</span>
               </span>
             </a>
           </div>
@@ -90,6 +100,7 @@
       </nav>
     </footer>
 
-    <script src="/app.js?v=20260709-json-seo-description"></script>
+    <script src="/extra-tools.js?v=20260710-expanded-tools"></script>
+    <script src="/app.js?v=20260710-expanded-tools"></script>
   </body>
 </html>

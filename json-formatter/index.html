@@ -15,7 +15,7 @@
     <link rel="icon" type="image/png" href="/assets/favicon-32.png?v=20260706" sizes="32x32">
     <link rel="icon" type="image/png" href="/assets/favicon-48.png?v=20260706" sizes="48x48">
     <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
-    <link rel="stylesheet" href="/styles.css?v=20260709-json-seo-description">
+    <link rel="stylesheet" href="/styles.css?v=20260710-expanded-tools">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-R2X7MDZRHJ"></script>
@@ -36,8 +36,11 @@
         <a class="top-nav-item" href="/image-compressor/" data-group="image">Image</a>
         <a class="top-nav-item" href="/pdf-merge/" data-group="file">File</a>
         <a class="top-nav-item" href="/case-converter/" data-group="text">Text</a>
-        <a class="top-nav-item" href="/unix-timestamp/" data-group="network">Network</a>
-        <a class="top-nav-item" href="/qr-code-generator/" data-group="other">Other</a>
+        <a class="top-nav-item" href="/encoding-converter/" data-group="developer">Developer</a>
+        <a class="top-nav-item" href="/json-formatter/" data-group="data">Data</a>
+        <a class="top-nav-item" href="/password-generator/" data-group="security">Security</a>
+        <a class="top-nav-item" href="/unix-timestamp/" data-group="date">Date</a>
+        <a class="top-nav-item" href="/color-converter/" data-group="color">Color</a>
       </nav>
     </header>
 
@@ -46,36 +49,36 @@
         <div class="intro-copy">
           <p class="eyebrow">Free online tools</p>
           <h1 class="head-title">Your Free Online Tools Library</h1>
-          <p>Run common image, PDF, writing, network, and security tasks directly in your browser. Your files and text stay on your device unless a tool clearly says otherwise.</p>
+          <p>Run image, PDF, writing, developer, data, security, date, and color tasks directly in your browser. Your files and text stay on your device unless a tool clearly says otherwise.</p>
         </div>
       </section>
 
       <section class="workspace" aria-label="Tools workspace">
         <aside class="tool-list">
           <div class="tool-list-head">
-            <h2><span id="toolGroupTitle">Network</span> Tools</h2>
+            <h2><span id="toolGroupTitle">Data</span> Tools</h2>
             <input id="toolSearch" type="search" placeholder="Search tools" autocomplete="off">
           </div>
           <div id="toolCards" class="tool-cards">
-            <a class="tool-card " href="/unix-timestamp/" data-tool="unix-timestamp">
-              <span class="tool-icon">UT</span>
-              <span>
-                <strong>Unix Timestamp Converter</strong>
-                <span>Convert Unix time, milliseconds, and readable dates.</span>
-              </span>
-            </a>
-            <a class="tool-card " href="/encoding-converter/" data-tool="encoding-converter">
-              <span class="tool-icon">EC</span>
-              <span>
-                <strong>Encoding Converter</strong>
-                <span>Encode and decode Unicode, UTF-8, ASCII, Base64, URL, HTML, and Hex.</span>
-              </span>
-            </a>
             <a class="tool-card active" href="/json-formatter/" data-tool="json-formatter">
               <span class="tool-icon">JSN</span>
               <span>
                 <strong>JSON Formatter</strong>
                 <span>Format, validate, minify, query, and convert JSON locally.</span>
+              </span>
+            </a>
+            <a class="tool-card " href="/csv-viewer-cleaner/" data-tool="csv-viewer-cleaner">
+              <span class="tool-icon">CSV</span>
+              <span>
+                <strong>CSV Viewer & Cleaner</strong>
+                <span>Preview, trim, deduplicate, and clean CSV data locally.</span>
+              </span>
+            </a>
+            <a class="tool-card " href="/table-to-markdown-html/" data-tool="table-to-markdown-html">
+              <span class="tool-icon">TBL</span>
+              <span>
+                <strong>Table to Markdown / HTML</strong>
+                <span>Convert CSV or TSV data into Markdown or HTML tables.</span>
               </span>
             </a>
           </div>
@@ -97,6 +100,7 @@
       </nav>
     </footer>
 
-    <script src="/app.js?v=20260709-json-seo-description"></script>
+    <script src="/extra-tools.js?v=20260710-expanded-tools"></script>
+    <script src="/app.js?v=20260710-expanded-tools"></script>
   </body>
 </html>

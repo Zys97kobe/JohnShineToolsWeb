@@ -100,14 +100,14 @@ const tools = [
     icon: "WC",
     category: "Text",
     path: "/word-counter/",
-    seoTitle: "Free Word Counter Online - Count Words and Characters",
-    seoDescription: "Count words, characters, sentences, and reading time online for free.",
+    seoTitle: "Free Word Counter Online - Words, Sentences and Reading Time",
+    seoDescription: "Count words, sentences, paragraphs, characters, reading time, and speaking time online for free.",
     title: "Word Counter",
-    summary: "Count words, characters, sentences, and reading time.",
-    description: "Paste English copy and get instant writing metrics for SEO, social posts, and documents.",
+    summary: "Analyze words, sentences, reading time, and speaking time.",
+    description: "Analyze articles, scripts, and documents with live writing metrics, including multilingual word counts.",
     instructions: [
-      "Paste or type your text into the input box.",
-      "Review the live word count, character count, sentence count, and reading time.",
+      "Paste or type your text, or load the example to try the counter instantly.",
+      "Review words, sentences, paragraphs, reading time, speaking time, and average word length.",
       "Edit the text as needed and the metrics will update automatically."
     ]
   },
@@ -133,20 +133,20 @@ const tools = [
     category: "Text",
     path: "/character-counter/",
     seoTitle: "Free Character Counter Online - Count Text Length",
-    seoDescription: "Count characters, bytes, lines, and paragraphs online for free.",
+    seoDescription: "Count Unicode characters, UTF-8 bytes, UTF-16 units, lines, and paragraphs online for free.",
     title: "Character Counter",
-    summary: "Count characters, bytes, lines, and paragraphs.",
-    description: "Measure text length for meta descriptions, ads, bios, forms, and messages.",
+    summary: "Measure Unicode characters, bytes, lines, and paragraphs.",
+    description: "Measure text length accurately for metadata, code, forms, messages, and storage limits.",
     instructions: [
-      "Paste or type the text you want to measure.",
-      "Check character, byte, line, and paragraph counts instantly.",
-      "Use the numbers to fit platform limits for ads, bios, metadata, or forms."
+      "Paste or type your text, or load the example to compare counting methods instantly.",
+      "Compare visible Unicode characters, characters without whitespace, UTF-8 bytes, and UTF-16 units.",
+      "Use the line and paragraph totals when checking structured or multi-line text."
     ]
   },
   {
     id: "qr-code-generator",
     icon: "QR",
-    category: "QR",
+    category: "Developer",
     path: "/qr-code-generator/",
     seoTitle: "Free QR Code Generator Online - Create QR Codes",
     seoDescription: "Generate downloadable QR codes for URLs, text, email addresses, and contact details.",
@@ -178,7 +178,7 @@ const tools = [
   {
     id: "unix-timestamp",
     icon: "UT",
-    category: "Network",
+    category: "Date",
     path: "/unix-timestamp/",
     seoTitle: "Free Unix Timestamp Converter Online - Convert Epoch Time",
     seoDescription: "Convert Unix timestamps to readable dates and convert dates to Unix epoch time online for free.",
@@ -194,7 +194,7 @@ const tools = [
   {
     id: "encoding-converter",
     icon: "EC",
-    category: "Network",
+    category: "Developer",
     path: "/encoding-converter/",
     seoTitle: "Free Encoding Converter Online - Unicode, UTF-8, Base64, URL",
     seoDescription: "Encode and decode Unicode escapes, UTF-8 bytes, ASCII native text, Base64, URL, HTML entities, and hexadecimal text online for free.",
@@ -210,7 +210,7 @@ const tools = [
   {
     id: "json-formatter",
     icon: "JSN",
-    category: "Network",
+    category: "Data",
     path: "/json-formatter/",
     seoTitle: "Free JSON Formatter Online - Format, Validate and Minify JSON",
     seoDescription: "Free JSON formatter, validator, minifier, JSON Path tester, object graph viewer, and JSON to YAML or CSV converter. Beautify and inspect JSON locally in your browser.",
@@ -221,6 +221,166 @@ const tools = [
       "Paste JSON into the input box.",
       "Format, minify, validate, query with JSON Path, or convert JSON to YAML or CSV.",
       "Review the object tree, copy the result, or download the output as a .json file."
+    ]
+  },
+  {
+    id: "csv-viewer-cleaner",
+    icon: "CSV",
+    category: "Data",
+    path: "/csv-viewer-cleaner/",
+    seoTitle: "Free CSV Viewer & Cleaner Online - Preview and Clean CSV",
+    seoDescription: "View, clean, deduplicate, trim, and download CSV files online for free. CSV data is processed locally in your browser.",
+    title: "CSV Viewer & Cleaner",
+    summary: "Preview, trim, deduplicate, and clean CSV data locally.",
+    description: "Inspect CSV or TSV data as a table, remove blank and duplicate rows, trim cells, and download a clean CSV without uploading your data.",
+    instructions: [
+      "Paste CSV data or choose a CSV, TSV, or text file from your device.",
+      "Select automatic or manual delimiter detection, then choose the cleaning options you need.",
+      "Preview the cleaned table, review the row and column totals, then download the cleaned CSV file."
+    ]
+  },
+  {
+    id: "hash-generator",
+    icon: "HG",
+    category: "Developer",
+    path: "/hash-generator/",
+    seoTitle: "Free Hash Generator Online - SHA-256, SHA-384 and SHA-512",
+    seoDescription: "Generate SHA-1, SHA-256, SHA-384, and SHA-512 hashes from text online for free using your browser's Web Crypto API.",
+    title: "Hash Generator",
+    summary: "Generate SHA hashes from text with Web Crypto.",
+    description: "Create hexadecimal and Base64 SHA hashes from text locally in your browser using the Web Crypto API.",
+    instructions: [
+      "Paste or type the text you want to hash.",
+      "Choose SHA-1, SHA-256, SHA-384, or SHA-512, then generate the digest.",
+      "Copy the hexadecimal or Base64 result for development, verification, or testing."
+    ]
+  },
+  {
+    id: "file-checksum",
+    icon: "FC",
+    category: "Developer",
+    path: "/file-checksum/",
+    seoTitle: "Free File Checksum Online - SHA-256 and SHA-512",
+    seoDescription: "Calculate and verify SHA-1, SHA-256, SHA-384, or SHA-512 file checksums locally in your browser for free.",
+    title: "File Checksum",
+    summary: "Calculate and verify SHA checksums for local files.",
+    description: "Calculate a file checksum without uploading the file, then compare it with an expected digest to verify integrity.",
+    instructions: [
+      "Choose a file from your device and select the checksum algorithm.",
+      "Calculate the digest locally in your browser.",
+      "Optionally paste an expected checksum to confirm whether the file matches."
+    ]
+  },
+  {
+    id: "table-to-markdown-html",
+    icon: "TBL",
+    category: "Data",
+    path: "/table-to-markdown-html/",
+    seoTitle: "Table to Markdown or HTML Converter Online",
+    seoDescription: "Convert CSV or TSV table data to Markdown or HTML tables online for free. Preview and copy the result in your browser.",
+    title: "Table to Markdown / HTML",
+    summary: "Convert CSV or TSV data into Markdown or HTML tables.",
+    description: "Paste delimited table data, preview the rows, and convert it into clean Markdown or semantic HTML table markup.",
+    instructions: [
+      "Paste CSV or TSV data, or load the example table.",
+      "Choose automatic delimiter detection and select Markdown or HTML output.",
+      "Convert the table, review the preview, then copy or download the generated markup."
+    ]
+  },
+  {
+    id: "random-token-generator",
+    icon: "RT",
+    category: "Security",
+    path: "/random-token-generator/",
+    seoTitle: "Secure Random Token Generator Online",
+    seoDescription: "Generate secure random hexadecimal, alphanumeric, URL-safe, or Base64URL tokens online using browser cryptography.",
+    title: "Random Token Generator",
+    summary: "Create cryptographically secure random tokens.",
+    description: "Generate one or more secure random tokens with configurable length and character format using browser cryptography.",
+    instructions: [
+      "Choose the token format, character length, and number of tokens.",
+      "Generate tokens with your browser's cryptographic random number generator.",
+      "Copy the tokens and store secrets only in an appropriate secure system."
+    ]
+  },
+  {
+    id: "csp-header-generator",
+    icon: "CSP",
+    category: "Security",
+    path: "/csp-header-generator/",
+    seoTitle: "Content Security Policy Header Generator Online",
+    seoDescription: "Build a Content-Security-Policy header with common CSP directives and copy the generated security header online for free.",
+    title: "CSP Header Generator",
+    summary: "Build a Content-Security-Policy header from common directives.",
+    description: "Create a CSP response header from editable source directives, with secure defaults and deployment guidance.",
+    instructions: [
+      "Enter the allowed sources for each Content Security Policy directive.",
+      "Enable optional security directives and generate the policy.",
+      "Test the policy in report-only mode before enforcing it on a production website."
+    ]
+  },
+  {
+    id: "time-zone-converter",
+    icon: "TZ",
+    category: "Date",
+    path: "/time-zone-converter/",
+    seoTitle: "Free Time Zone Converter Online - Convert Date and Time",
+    seoDescription: "Convert a date and time between IANA time zones online for free, including local time, UTC, and daylight saving offsets.",
+    title: "Time Zone Converter",
+    summary: "Convert dates and times between IANA time zones.",
+    description: "Convert a wall-clock date and time between supported IANA time zones with local offsets and daylight saving rules.",
+    instructions: [
+      "Choose the source date, time, and time zone.",
+      "Select the destination time zone and run the conversion.",
+      "Review the destination time, UTC time, and source and destination offsets."
+    ]
+  },
+  {
+    id: "business-days-calculator",
+    icon: "BD",
+    category: "Date",
+    path: "/business-days-calculator/",
+    seoTitle: "Free Business Days Calculator Online",
+    seoDescription: "Count business days between two dates online. Exclude weekends and optional custom holidays with clear inclusive date settings.",
+    title: "Business Days Calculator",
+    summary: "Count weekdays between dates and exclude custom holidays.",
+    description: "Calculate working days in a date range, control whether endpoints are included, and exclude optional custom holidays.",
+    instructions: [
+      "Choose the start and end dates and whether to include each endpoint.",
+      "Optionally enter custom holiday dates to exclude from the result.",
+      "Calculate the business, weekend, holiday, and total included days."
+    ]
+  },
+  {
+    id: "color-converter",
+    icon: "CLR",
+    category: "Color",
+    path: "/color-converter/",
+    seoTitle: "HEX, RGB and HSL Color Converter Online",
+    seoDescription: "Convert colors between HEX, RGB, and HSL formats online for free. Preview colors and copy CSS-ready values instantly.",
+    title: "HEX / RGB / HSL Converter",
+    summary: "Convert and preview HEX, RGB, and HSL colors.",
+    description: "Enter a HEX, RGB, or HSL color and convert it into CSS-ready values with a live color preview.",
+    instructions: [
+      "Enter a HEX, RGB, or HSL color, or choose a color visually.",
+      "Convert the value and review the live preview.",
+      "Copy the HEX, RGB, or HSL representation you need."
+    ]
+  },
+  {
+    id: "contrast-checker",
+    icon: "CCK",
+    category: "Color",
+    path: "/contrast-checker/",
+    seoTitle: "WCAG Color Contrast Checker Online",
+    seoDescription: "Check foreground and background color contrast ratios against WCAG AA and AAA text thresholds online for free.",
+    title: "Contrast Checker",
+    summary: "Check color contrast against WCAG AA and AAA thresholds.",
+    description: "Compare foreground and background colors, preview sample text, and check WCAG contrast thresholds for normal and large text.",
+    instructions: [
+      "Enter or choose the foreground and background colors.",
+      "Calculate the contrast ratio between the two colors.",
+      "Review WCAG AA and AAA results for normal and large text, then adjust colors as needed."
     ]
   }
 ];
@@ -234,8 +394,8 @@ document.querySelector("#year").textContent = new Date().getFullYear();
 
 const siteBaseUrl = "https://johnshinetools.com";
 const homeMeta = {
-  title: "JohnShine Tools - Free Online Tools for Images, PDFs, Text, Network and Security",
-  description: "Use free online tools to compress images, convert images, merge PDFs, split PDFs, count words, convert text case, generate QR codes, create passwords, convert timestamps, format JSON, or convert encodings.",
+  title: "JohnShine Tools - Free Image, PDF, Text & Developer Tools",
+  description: "Free browser-based tools for images, PDFs, text, developers, data, security, dates, and colors. Clean CSV, hash data, convert time zones, and more.",
   url: `${siteBaseUrl}/`
 };
 
@@ -246,19 +406,31 @@ const toolGroups = {
   },
   file: {
     label: "File",
-    tools: ["pdf-merge", "pdf-split", "pdf-compressor", "word-counter"]
+    tools: ["pdf-merge", "pdf-split", "pdf-compressor"]
   },
   text: {
     label: "Text",
-    tools: ["case-converter", "character-counter"]
+    tools: ["word-counter", "character-counter", "case-converter"]
   },
-  network: {
-    label: "Network",
-    tools: ["unix-timestamp", "encoding-converter", "json-formatter"]
+  developer: {
+    label: "Developer",
+    tools: ["encoding-converter", "hash-generator", "file-checksum", "qr-code-generator"]
   },
-  other: {
-    label: "Other",
-    tools: ["qr-code-generator", "password-generator"]
+  data: {
+    label: "Data",
+    tools: ["json-formatter", "csv-viewer-cleaner", "table-to-markdown-html"]
+  },
+  security: {
+    label: "Security",
+    tools: ["password-generator", "random-token-generator", "csp-header-generator"]
+  },
+  date: {
+    label: "Date",
+    tools: ["unix-timestamp", "time-zone-converter", "business-days-calculator"]
+  },
+  color: {
+    label: "Color",
+    tools: ["color-converter", "contrast-checker"]
   }
 };
 
@@ -285,6 +457,7 @@ const LIMITS = {
   imageMaxDimension: 10000,
   imageMaxPixels: 10000 * 10000,
   qrLogoFile: 2 * MB,
+  csvFile: 10 * MB,
   pdfFile: 50 * MB,
   pdfMergeTotal: 150 * MB
 };
@@ -1023,36 +1196,93 @@ function initPdfTool(kind) {
   });
 }
 
+const counterExampleText = [
+  "JohnShine Tools is a practical collection of free online utilities for everyday digital work. The site brings image, PDF, writing, encoding, data, QR code, password, and time conversion tools into one clear workspace. Instead of installing a separate application for every small task, visitors can open a browser, choose a tool, finish the job, and continue working. The interface is direct and predictable, so each utility can be understood without an account or a long manual.",
+  "Privacy is an important part of the experience. Whenever browser technology makes it possible, files and text are processed locally on the visitor's device. Images can be resized, converted, or compressed without first being uploaded to a remote service. Text entered into a counter or converter remains in the browser during use. Each tool also explains relevant limitations so that visitors can decide whether the workflow is appropriate for their document or data.",
+  "The image tools cover common publishing, ecommerce, design, and office tasks. Image Compressor reduces JPG, PNG, and WebP file sizes while balancing quality and download size. Image Converter changes pictures between widely supported formats, and Image Resizer adjusts width, height, or scale. The PDF tools can combine documents, extract selected pages, and rebuild a PDF with cleaner structure and metadata. These features help prepare website assets, reports, invoices, presentations, and records.",
+  "Writing tools help people inspect and transform text. Word Counter reports words, characters, sentences, paragraphs, estimated reading time, estimated speaking time, and average word length. Its multilingual segmentation recognizes text beyond simple English spacing rules. Character Counter focuses on visible Unicode characters, characters without whitespace, UTF-8 bytes, UTF-16 code units, lines, and paragraphs. Case Converter changes headings, labels, identifiers, and copy into common writing and programming styles.",
+  "Developer and data utilities make technical work easier to inspect. JSON Formatter and CSV Viewer & Cleaner handle structured data, while Table to Markdown / HTML prepares portable table markup. Encoding Converter handles Unicode, Base64, URLs, HTML entities, and hexadecimal text. Hash Generator and File Checksum use browser cryptography for digest and integrity tasks. Security tools create passwords, random tokens, and CSP headers. Date tools convert timestamps and time zones or count business days, while color tools convert CSS colors and check WCAG contrast.",
+  "The site is designed for people who value speed, clarity, and control. A content editor can optimize an image and check article length before publishing. A developer can validate JSON, decode a value, and convert a timestamp while investigating an issue. JohnShine Tools continues to grow around useful, repeatable needs, with focused utilities that load quickly, respect user data, work on desktop and mobile screens, and produce results that are easy to understand."
+].join("\n\n");
+
+function segmentCount(text, granularity) {
+  if (!text) return 0;
+  if (typeof Intl.Segmenter === "function") {
+    const segmenter = new Intl.Segmenter(undefined, { granularity });
+    const segments = [...segmenter.segment(text)];
+    if (granularity === "grapheme") return segments.length;
+    return segments.filter((item) => {
+      if (granularity === "word") return item.isWordLike;
+      return item.segment.trim();
+    }).length;
+  }
+  if (granularity === "word") return (text.trim().match(/[\p{L}\p{N}]+(?:['’-][\p{L}\p{N}]+)*/gu) || []).length;
+  if (granularity === "sentence") return (text.match(/[^.!?。！？]+[.!?。！？]*/gu) || []).filter((item) => item.trim()).length;
+  return Array.from(text).length;
+}
+
 function textStats(text) {
-  const words = (text.trim().match(/\b[\w'-]+\b/g) || []).length;
-  const chars = text.length;
-  const charsNoSpaces = text.replace(/\s/g, "").length;
-  const sentences = (text.match(/[.!?]+(?:\s|$)/g) || []).length;
+  const words = segmentCount(text, "word");
+  const chars = segmentCount(text, "grapheme");
+  const charsNoSpaces = segmentCount(text.replace(/\s/gu, ""), "grapheme");
+  const sentences = segmentCount(text, "sentence");
   const lines = text ? text.split(/\r\n|\r|\n/).length : 0;
   const paragraphs = text.trim() ? text.trim().split(/\n\s*\n/).length : 0;
-  return { words, chars, charsNoSpaces, sentences, lines, paragraphs, minutes: Math.max(1, Math.ceil(words / 225)) };
+  const wordCharacters = Array.from(text.matchAll(/[\p{L}\p{N}]+/gu), (match) => Array.from(match[0]).length)
+    .reduce((total, length) => total + length, 0);
+  return {
+    words,
+    chars,
+    charsNoSpaces,
+    sentences,
+    lines,
+    paragraphs,
+    utf8Bytes: new TextEncoder().encode(text).length,
+    utf16Units: text.length,
+    readingMinutes: words ? Math.max(1, Math.ceil(words / 225)) : 0,
+    speakingMinutes: words ? Math.max(1, Math.ceil(words / 130)) : 0,
+    averageWordLength: words ? (wordCharacters / words).toFixed(1) : "0.0"
+  };
 }
 
 function initCounter(type) {
   const isWord = type === "word";
-  toolPanel.querySelector("#textInput").addEventListener("input", (event) => {
-    const stats = textStats(event.target.value);
+  const input = toolPanel.querySelector("#textInput");
+  const update = () => {
+    const stats = textStats(input.value);
     document.querySelector("#textResult").innerHTML = isWord ? `
       <div class="result-grid">
         <div class="metric"><span>Words</span><strong>${stats.words}</strong></div>
         <div class="metric"><span>Characters</span><strong>${stats.chars}</strong></div>
         <div class="metric"><span>Sentences</span><strong>${stats.sentences}</strong></div>
-        <div class="metric"><span>Reading Time</span><strong>${stats.minutes} min</strong></div>
+        <div class="metric"><span>Paragraphs</span><strong>${stats.paragraphs}</strong></div>
+        <div class="metric"><span>Reading Time</span><strong>${stats.readingMinutes} min</strong></div>
+        <div class="metric"><span>Speaking Time</span><strong>${stats.speakingMinutes} min</strong></div>
+        <div class="metric"><span>Avg. Word Length</span><strong>${stats.averageWordLength}</strong></div>
       </div>
     ` : `
       <div class="result-grid">
         <div class="metric"><span>Characters</span><strong>${stats.chars}</strong></div>
-        <div class="metric"><span>No Spaces</span><strong>${stats.charsNoSpaces}</strong></div>
+        <div class="metric"><span>No Whitespace</span><strong>${stats.charsNoSpaces}</strong></div>
+        <div class="metric"><span>UTF-8 Bytes</span><strong>${stats.utf8Bytes}</strong></div>
+        <div class="metric"><span>UTF-16 Units</span><strong>${stats.utf16Units}</strong></div>
         <div class="metric"><span>Lines</span><strong>${stats.lines}</strong></div>
         <div class="metric"><span>Paragraphs</span><strong>${stats.paragraphs}</strong></div>
       </div>
     `;
+  };
+  toolPanel.querySelector("#loadCounterExample").addEventListener("click", () => {
+    input.value = counterExampleText;
+    update();
+    input.focus();
   });
+  toolPanel.querySelector("#clearCounterText").addEventListener("click", () => {
+    input.value = "";
+    update();
+    input.focus();
+  });
+  input.addEventListener("input", update);
+  update();
 }
 
 function textAreaBody(placeholder = "Paste or type text here...") {
@@ -1060,6 +1290,10 @@ function textAreaBody(placeholder = "Paste or type text here...") {
     <div class="field">
       <label for="textInput">Text</label>
       <textarea id="textInput" placeholder="${placeholder}"></textarea>
+    </div>
+    <div class="actions">
+      <button class="secondary" id="loadCounterExample" type="button">Load Example</button>
+      <button class="secondary" id="clearCounterText" type="button">Clear</button>
     </div>
     <div class="result" id="textResult"></div>
   `;
@@ -1694,6 +1928,270 @@ function jsonToCsv(value) {
   return ["value", ...rows.map(csvCell)].join("\n");
 }
 
+const csvExampleText = `name,email,department,status,notes
+Ada Lovelace,ada@example.com,Engineering,Active,"First programmer, analytical engine"
+Grace Hopper,grace@example.com,Engineering,Active,"Compiler pioneer"
+Katherine Johnson,katherine@example.com,Research,Active,"Orbital mechanics"
+Grace Hopper,grace@example.com,Engineering,Active,"Compiler pioneer"
+  Margaret Hamilton  ,margaret@example.com,Software,Active,"  Apollo guidance software  "
+,, , ,
+Tim Berners-Lee,tim@example.com,Web,Active,"Created the World Wide Web"`;
+
+function csvViewerCleanerBody() {
+  return `
+    <div class="field csv-input-field">
+      <label for="csvInput">CSV or TSV input</label>
+      <textarea id="csvInput" spellcheck="false" placeholder="name,email,status&#10;Ada,ada@example.com,Active"></textarea>
+      <small>Paste data or choose a file up to 10 MB. Processing stays in your browser.</small>
+    </div>
+    <div class="form-grid two-col csv-controls">
+      <div class="field">
+        <label for="csvFile">Choose a file</label>
+        <input id="csvFile" type="file" accept=".csv,.tsv,.txt,text/csv,text/tab-separated-values,text/plain">
+      </div>
+      <div class="field">
+        <label for="csvDelimiter">Input delimiter</label>
+        <select id="csvDelimiter">
+          <option value="auto">Auto detect</option>
+          <option value=",">Comma (,)</option>
+          <option value="tab">Tab</option>
+          <option value=";">Semicolon (;)</option>
+          <option value="|">Pipe (|)</option>
+        </select>
+      </div>
+    </div>
+    <div class="csv-clean-options" role="group" aria-label="CSV cleaning options">
+      <label class="csv-check"><input id="csvTrimCells" type="checkbox" checked> Trim cells</label>
+      <label class="csv-check"><input id="csvRemoveBlank" type="checkbox" checked> Remove blank rows</label>
+      <label class="csv-check"><input id="csvRemoveDuplicates" type="checkbox" checked> Remove duplicate rows</label>
+      <label class="csv-check"><input id="csvHasHeader" type="checkbox" checked> First row is header</label>
+    </div>
+    <div class="actions csv-actions">
+      <button class="primary" id="cleanCsv" type="button">Preview &amp; Clean</button>
+      <button class="secondary" id="loadCsvExample" type="button">Load Example</button>
+      <button class="secondary" id="copyCleanCsv" type="button" disabled>Copy CSV</button>
+      <button class="secondary" id="downloadCleanCsv" type="button" disabled>Download CSV</button>
+      <button class="secondary" id="clearCsv" type="button">Clear</button>
+    </div>
+    <div class="result" id="csvSummary"></div>
+    <div class="field csv-output-field" id="csvOutputField" hidden>
+      <label for="csvOutput">Cleaned CSV</label>
+      <textarea id="csvOutput" spellcheck="false" readonly></textarea>
+    </div>
+    <div class="result csv-preview" id="csvPreview" hidden></div>
+  `;
+}
+
+function parseDelimitedText(source, delimiter) {
+  const text = source.replace(/^\uFEFF/, "");
+  const rows = [];
+  let row = [];
+  let cell = "";
+  let quoted = false;
+  let rowStarted = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    if (char === '"') {
+      rowStarted = true;
+      if (quoted && text[index + 1] === '"') {
+        cell += '"';
+        index += 1;
+      } else if (quoted) {
+        quoted = false;
+      } else if (!cell) {
+        quoted = true;
+      } else {
+        cell += char;
+      }
+      continue;
+    }
+    if (!quoted && char === delimiter) {
+      rowStarted = true;
+      row.push(cell);
+      cell = "";
+      continue;
+    }
+    if (!quoted && (char === "\n" || char === "\r")) {
+      row.push(cell);
+      rows.push(row);
+      row = [];
+      cell = "";
+      rowStarted = false;
+      if (char === "\r" && text[index + 1] === "\n") index += 1;
+      continue;
+    }
+    rowStarted = true;
+    cell += char;
+  }
+
+  if (quoted) throw new Error("An opening quote is missing its closing quote.");
+  if (rowStarted || cell || row.length) {
+    row.push(cell);
+    rows.push(row);
+  }
+  return rows;
+}
+
+function detectCsvDelimiter(source) {
+  const candidates = [",", "\t", ";", "|"];
+  let best = { delimiter: ",", score: -1 };
+  candidates.forEach((delimiter) => {
+    try {
+      const rows = parseDelimitedText(source, delimiter)
+        .filter((row) => row.some((cell) => cell.trim()))
+        .slice(0, 50);
+      const widths = rows.map((row) => row.length);
+      const frequency = new Map();
+      widths.forEach((width) => frequency.set(width, (frequency.get(width) || 0) + 1));
+      const [modeWidth = 1, modeCount = 0] = [...frequency.entries()].sort((a, b) => b[1] - a[1])[0] || [];
+      const score = modeWidth > 1 ? modeCount * 100 + modeWidth : 0;
+      if (score > best.score) best = { delimiter, score };
+    } catch (error) {
+      // Ignore candidates that cannot parse quoted fields cleanly.
+    }
+  });
+  return best.delimiter;
+}
+
+function csvDelimiterLabel(delimiter) {
+  return delimiter === "\t" ? "Tab" : delimiter === "," ? "Comma" : delimiter === ";" ? "Semicolon" : "Pipe";
+}
+
+function cleanCsvRows(rows, options) {
+  let cleaned = rows.map((row) => options.trimCells ? row.map((cell) => cell.trim()) : [...row]);
+  const beforeBlank = cleaned.length;
+  if (options.removeBlank) cleaned = cleaned.filter((row) => row.some((cell) => cell.trim()));
+  const blankRowsRemoved = beforeBlank - cleaned.length;
+  let duplicateRowsRemoved = 0;
+  if (options.removeDuplicates) {
+    const seen = new Set();
+    cleaned = cleaned.filter((row, index) => {
+      if (options.hasHeader && index === 0) return true;
+      const key = JSON.stringify(row);
+      if (seen.has(key)) {
+        duplicateRowsRemoved += 1;
+        return false;
+      }
+      seen.add(key);
+      return true;
+    });
+  }
+  return { rows: cleaned, blankRowsRemoved, duplicateRowsRemoved };
+}
+
+function renderCsvTable(rows, hasHeader) {
+  const maxColumns = Math.min(30, Math.max(...rows.map((row) => row.length), 0));
+  const previewRows = rows.slice(0, 101);
+  const rowMarkup = (row, cellTag) => `<tr>${Array.from({ length: maxColumns }, (_, index) => `<${cellTag}>${htmlEscape(row[index] || "")}</${cellTag}>`).join("")}</tr>`;
+  const header = hasHeader && previewRows.length ? `<thead>${rowMarkup(previewRows[0], "th")}</thead>` : "";
+  const bodyRows = hasHeader ? previewRows.slice(1) : previewRows;
+  return `
+    <h3>Table preview</h3>
+    <div class="csv-table-wrap">
+      <table>${header}<tbody>${bodyRows.map((row) => rowMarkup(row, "td")).join("")}</tbody></table>
+    </div>
+    ${rows.length > previewRows.length || Math.max(...rows.map((row) => row.length), 0) > maxColumns ? `<p class="notice">Preview is limited to 100 rows and 30 columns. The downloaded file includes all cleaned data.</p>` : ""}
+  `;
+}
+
+function initCsvViewerCleaner() {
+  const input = document.querySelector("#csvInput");
+  const fileInput = document.querySelector("#csvFile");
+  const delimiterInput = document.querySelector("#csvDelimiter");
+  const summary = document.querySelector("#csvSummary");
+  const preview = document.querySelector("#csvPreview");
+  const output = document.querySelector("#csvOutput");
+  const outputField = document.querySelector("#csvOutputField");
+  const copyButton = document.querySelector("#copyCleanCsv");
+  const downloadButton = document.querySelector("#downloadCleanCsv");
+
+  const resetOutput = () => {
+    output.value = "";
+    outputField.hidden = true;
+    preview.hidden = true;
+    preview.innerHTML = "";
+    summary.innerHTML = "";
+    copyButton.disabled = true;
+    downloadButton.disabled = true;
+  };
+
+  const process = () => {
+    const source = input.value;
+    if (!source.trim()) {
+      resetOutput();
+      summary.innerHTML = `<p class="notice">Paste CSV data or choose a file first.</p>`;
+      return;
+    }
+    try {
+      const selectedDelimiter = delimiterInput.value;
+      const delimiter = selectedDelimiter === "auto" ? detectCsvDelimiter(source) : selectedDelimiter === "tab" ? "\t" : selectedDelimiter;
+      const parsedRows = parseDelimitedText(source, delimiter);
+      const options = {
+        trimCells: document.querySelector("#csvTrimCells").checked,
+        removeBlank: document.querySelector("#csvRemoveBlank").checked,
+        removeDuplicates: document.querySelector("#csvRemoveDuplicates").checked,
+        hasHeader: document.querySelector("#csvHasHeader").checked
+      };
+      const cleaned = cleanCsvRows(parsedRows, options);
+      if (!cleaned.rows.length) throw new Error("No data rows remain after cleaning.");
+      const columns = Math.max(...cleaned.rows.map((row) => row.length));
+      output.value = cleaned.rows.map((row) => row.map(csvCell).join(",")).join("\n");
+      outputField.hidden = false;
+      preview.hidden = false;
+      preview.innerHTML = renderCsvTable(cleaned.rows, options.hasHeader);
+      summary.innerHTML = `
+        <div class="result-grid compact-metrics">
+          <div class="metric"><span>Rows</span><strong>${cleaned.rows.length}</strong></div>
+          <div class="metric"><span>Columns</span><strong>${columns}</strong></div>
+          <div class="metric"><span>Delimiter</span><strong>${csvDelimiterLabel(delimiter)}</strong></div>
+          <div class="metric"><span>Blank Rows Removed</span><strong>${cleaned.blankRowsRemoved}</strong></div>
+          <div class="metric"><span>Duplicates Removed</span><strong>${cleaned.duplicateRowsRemoved}</strong></div>
+          <div class="metric"><span>Output Size</span><strong>${bytes(new TextEncoder().encode(output.value).length)}</strong></div>
+        </div>
+      `;
+      copyButton.disabled = false;
+      downloadButton.disabled = false;
+    } catch (error) {
+      resetOutput();
+      summary.innerHTML = `<p class="notice">CSV could not be parsed: ${htmlEscape(error.message)}</p>`;
+    }
+  };
+
+  document.querySelector("#cleanCsv").addEventListener("click", process);
+  document.querySelector("#loadCsvExample").addEventListener("click", () => {
+    input.value = csvExampleText;
+    delimiterInput.value = "auto";
+    process();
+  });
+  document.querySelector("#clearCsv").addEventListener("click", () => {
+    input.value = "";
+    fileInput.value = "";
+    resetOutput();
+    input.focus();
+  });
+  copyButton.addEventListener("click", async () => {
+    await navigator.clipboard.writeText(output.value);
+    showToast("Cleaned CSV copied");
+  });
+  downloadButton.addEventListener("click", () => {
+    downloadBlob(new Blob([`\uFEFF${output.value}`], { type: "text/csv;charset=utf-8" }), "cleaned-data.csv");
+  });
+  fileInput.addEventListener("change", async () => {
+    const file = fileInput.files[0];
+    if (!file) return;
+    if (file.size > LIMITS.csvFile) {
+      resetOutput();
+      summary.innerHTML = `<p class="notice">This file is too large. Choose a CSV file under ${bytes(LIMITS.csvFile)}.</p>`;
+      fileInput.value = "";
+      return;
+    }
+    input.value = await file.text();
+    process();
+  });
+  input.addEventListener("input", resetOutput);
+}
+
 function parseJsonPath(path) {
   const source = path.trim();
   if (!source || source[0] !== "$") throw new Error("JSON Path must start with $.");
@@ -2164,8 +2662,18 @@ function renderTool() {
     "qr-code-generator": qrBody(),
     "password-generator": passwordBody(),
     "unix-timestamp": timestampBody(),
+    "time-zone-converter": timeZoneConverterBody(),
+    "business-days-calculator": businessDaysCalculatorBody(),
     "json-formatter": jsonFormatterBody(),
-    "encoding-converter": encodingBody()
+    "csv-viewer-cleaner": csvViewerCleanerBody(),
+    "table-to-markdown-html": tableConverterBody(),
+    "encoding-converter": encodingBody(),
+    "hash-generator": hashGeneratorBody(),
+    "file-checksum": fileChecksumBody(),
+    "random-token-generator": randomTokenGeneratorBody(),
+    "csp-header-generator": cspHeaderGeneratorBody(),
+    "color-converter": colorConverterBody(),
+    "contrast-checker": contrastCheckerBody()
   };
 
   toolPanel.innerHTML = panelShell(tool, bodies[tool.id]);
@@ -2182,8 +2690,18 @@ function renderTool() {
   if (tool.id === "qr-code-generator") initQr();
   if (tool.id === "password-generator") initPassword();
   if (tool.id === "unix-timestamp") initTimestamp();
+  if (tool.id === "time-zone-converter") initTimeZoneConverter();
+  if (tool.id === "business-days-calculator") initBusinessDaysCalculator();
   if (tool.id === "json-formatter") initJsonFormatter();
+  if (tool.id === "csv-viewer-cleaner") initCsvViewerCleaner();
+  if (tool.id === "table-to-markdown-html") initTableConverter();
   if (tool.id === "encoding-converter") initEncoding();
+  if (tool.id === "hash-generator") initHashGenerator();
+  if (tool.id === "file-checksum") initFileChecksum();
+  if (tool.id === "random-token-generator") initRandomTokenGenerator();
+  if (tool.id === "csp-header-generator") initCspHeaderGenerator();
+  if (tool.id === "color-converter") initColorConverter();
+  if (tool.id === "contrast-checker") initContrastChecker();
 }
 
 toolCards.addEventListener("click", (event) => {
